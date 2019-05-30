@@ -66,9 +66,6 @@ export default {
         console.log(error)
       })
     },
-    changeLoginState () {
-      this.$store.dispatch('changeState');
-    }
   },
 }
 </script>
