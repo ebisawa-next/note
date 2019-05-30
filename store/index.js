@@ -5,9 +5,10 @@ const store = () => {
     return new Vuex.Store({
         state: () => ({
             notes: [],
+            isLoggedIn: false,
         }),
         mutations: {
-            ...vuexfireMutations
+            ...vuexfireMutations,
         },
         actions: {
             setNotesRef: firestoreAction(({ bindFirestoreRef }, ref) => {
@@ -18,11 +19,20 @@ const store = () => {
                 notes.push({ content: note })
                 commit('setNotes', notes)
             },
+            successedLogin (store) {
+                store.state.isLoggedIn = true;
+            },
+            failedLogin (store) {
+                store.state.isLoggedIn = false;
+            },
         },
         getters: {
             getNotes: (state) => {
                 return state.notes
             },
+            getLoggedIn: (state) => {
+                return state.isLoggedIn
+            }
         },
     })
 }

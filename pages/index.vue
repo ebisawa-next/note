@@ -1,6 +1,8 @@
 <template>
   <section class="container">
-    <p v-if="isLoggedIn">ようこそ{{ user.displayName }}</p>
+    <div v-if="isLoggedIn">
+        <p>ようこそ{{ user.displayName }}</p>
+    </div>
     <p v-else class="login" @click="googleLogin">ログイン</p>
     <h1>くそフォーム</h1>
     <div class="forms">
@@ -25,21 +27,20 @@ export default {
   data () {
     return {
       newNote: '',
-      isLoggedIn: false,
       user: null,
     }
   },
   computed: {
-    ...mapGetters({ notes: 'getNotes' })
+    ...mapGetters({ notes: 'getNotes', isLoggedIn: 'getLoggedIn' })
   },
   mounted () {
     this.$store.dispatch('setNotesRef', db.collection('notes'))
     auth().onAuthStateChanged( (user) => {
       if (user) {
-        this.isLoggedIn = true
+        this.$store.dispatch('successedLogin');
         this.user = user
       } else {
-        this.isLoggedIn = false
+        this.$store.dispatch('failedLogin');
         this.user = null
       }
     })
@@ -67,6 +68,9 @@ export default {
         console.log(error)
       })
     },
+    changeLoginState () {
+      this.$store.dispatch('changeState');
+    }
   },
 }
 </script>
@@ -92,6 +96,13 @@ export default {
   padding: 10px;
   border-radius: 4px;
   margin-left: 10px;
+}
+
+.login {
+  padding: 10px;
+  background-color: #ffab00;
+  border-radius: 4px;
+  display: inline-flex;
 }
 
 </style>
