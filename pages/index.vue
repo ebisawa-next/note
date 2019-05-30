@@ -27,21 +27,18 @@ export default {
   data () {
     return {
       newNote: '',
-      user: null,
     }
   },
   computed: {
-    ...mapGetters({ notes: 'getNotes', isLoggedIn: 'getLoggedIn' })
+    ...mapGetters({ notes: 'getNotes', isLoggedIn: 'getLoggedIn', user: 'getUser' })
   },
   mounted () {
     this.$store.dispatch('setNotesRef', db.collection('notes'))
     auth().onAuthStateChanged( (user) => {
       if (user) {
-        this.$store.dispatch('successedLogin');
-        this.user = user
+        this.$store.dispatch('successedLogin', user);
       } else {
-        this.$store.dispatch('failedLogin');
-        this.user = null
+        this.$store.dispatch('failedLogin', user);
       }
     })
   },

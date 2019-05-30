@@ -6,6 +6,7 @@ const store = () => {
         state: () => ({
             notes: [],
             isLoggedIn: false,
+            user: null,
         }),
         mutations: {
             ...vuexfireMutations,
@@ -19,12 +20,17 @@ const store = () => {
                 notes.push({ content: note })
                 commit('setNotes', notes)
             },
-            successedLogin (store) {
+            successedLogin (store, user) {
                 store.state.isLoggedIn = true;
+                store.state.user = user;
             },
             failedLogin (store) {
                 store.state.isLoggedIn = false;
+                store.state.user = null;
             },
+            // setUser (store, user) {
+            //     store.state.user = user;
+            // }
         },
         getters: {
             getNotes: (state) => {
@@ -32,6 +38,9 @@ const store = () => {
             },
             getLoggedIn: (state) => {
                 return state.isLoggedIn
+            },
+            getUser: (state) => {
+                return state.user;
             }
         },
     })
