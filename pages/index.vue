@@ -2,6 +2,7 @@
   <section class="container">
     <div v-if="isLoggedIn">
         <p>ようこそ{{ user.displayName }}</p>
+        <nuxt-link to="/mypage">マイページに行こう</nuxt-link>
     </div>
     <p v-else class="login" @click="googleLogin">ログイン</p>
     <h1>くそフォーム</h1>
