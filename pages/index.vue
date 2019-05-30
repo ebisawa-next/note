@@ -1,27 +1,32 @@
 <template>
   <section class="container">
+    <p v-if="isLoggedIn">ようこそ{{ user.displayName }}</p>
+    <p v-else class="login" @click="googleLogin">ログイン</p>
     <h1>くそフォーム</h1>
     <div class="forms">
       <input type="text" v-model="newNote" class="form" @keyup.enter="saveNote" placeholder="ほげほげほげ" />
       <p class="sendButton" @click="saveNote">送る</p>
     </div>
-    <h1>くそにっき</h1>
-    <ul>
-      <li v-for="(note, index) in notes" :key="index">
-        {{ note.content }}
-      </li>
-    </ul>
+      <h1>くそにっき</h1>
+      <p v-if="isLoggedIn">{{ user.displayName }}のくそにっき</p>
+      <p v-else>名無し</p>
+      <ul>
+        <li v-for="(note, index) in notes" :key="index">
+          {{ note.content }}
+        </li>
+      </ul>
   </section>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { db } from '../plugins/firebase'
-
+import { db, auth } from '../plugins/firebase'
 export default {
   data () {
     return {
       newNote: '',
+      isLoggedIn: false,
+      user: null,
     }
   },
   computed: {
@@ -29,16 +34,38 @@ export default {
   },
   mounted () {
     this.$store.dispatch('setNotesRef', db.collection('notes'))
+    auth().onAuthStateChanged( (user) => {
+      if (user) {
+        this.isLoggedIn = true
+        this.user = user
+      } else {
+        this.isLoggedIn = false
+        this.user = null
+      }
+    })
   },
   methods: {
     saveNote () {
       if (!this.newNote.length) {
         return
       }
-      const newNote = { content: this.newNote }
+      const newNote = {
+        content: this.newNote,
+        name: this.user ? this.user.displayName : 'Anonymous'
+      }
       this.newNote = ''
-      db.collection('notes').add(newNote);
-      console.log('collected')
+      db.collection('notes').add(newNote)
+    },
+    googleLogin () {
+      auth().signInWithRedirect(new auth.GoogleAuthProvider())
+    },
+    googleLogout () {
+      auth().signOut().then( () => {
+        this.isLoggedIn = false
+        this.user = null
+      }).catch( (error) => {
+        console.log(error)
+      })
     },
   },
 }
