@@ -17,24 +17,22 @@ const store = () => {
             setNotesRef: firestoreAction(({ bindFirestoreRef }, ref) => {
                 bindFirestoreRef('notes', ref)
             }),
-            saveNote({ commit, state }, note) {
-                let notes = state.notes
-                notes.push({ content: note })
-                commit('setNotes', notes)
-            },
+            setUserdataRef: firestoreAction(({ bindFirestoreRef }, ref) => {
+                bindFirestoreRef('users', ref)
+            }),
             successedLogin (store, user) {
                 store.state.isLoggedIn = true;
                 store.state.user = user;
                 db.collection('users').doc(store.state.user.uid).get().then((doc) => {
-                  if (doc.exists) {
-                    console.log('ドキュメントあったお', doc.data());
-                    store.state.userData = doc.data();
-                  } else {
-                    console.log('なかったお');
-                    store.state.userData = {};
-                  }
+                    if (doc.exists) {
+                        console.log('ドキュメントあったお', doc.data());
+                        store.state.userData = doc.data();
+                    } else {
+                        console.log('なかったお');
+                        store.state.userData = null;
+                    }
                 }).catch((err) => {
-                  console.log(err);
+                    console.log(err);
                 })
             },
             failedLogin (store) {

@@ -5,8 +5,8 @@
         <div v-if="isLoggedIn">
             <p v-if="isLoggedIn" class="login" @click="googleLogout">ログアウトする</p>
             <div class="forms">
-                <input type="text" v-model="newData" class="form" @keyup.enter="saveData(newData)" placeholder="ほげほげほげ" />
-                <p class="sendButton" @click="saveData(newData)">送る</p>
+                <input type="text" v-model="newData" class="form" placeholder="ほげほげほげ" />
+                <p class="sendButton" @click="saveData(newData)">dataを送る</p>
             </div>
 
             <table class="information">
@@ -43,10 +43,14 @@ export default {
         ...mapGetters({
             isLoggedIn: 'getLoggedIn',
             user: 'getUser',
-            userData: 'getUserData'
+            userData: 'getUserData',
+            notes: 'getNotes'
         })
     },
     mounted () {
+        this.$store.dispatch('setUserdataRef', db.collection('users'))
+        console.log(this.userData)
+        console.log(this.notes)
         this.$store.dispatch('setNotesRef', db.collection('notes'))
         auth().onAuthStateChanged( (user) => {
             if (user) {
