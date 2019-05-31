@@ -2,18 +2,24 @@ import Vuex from 'vuex'
 import { vuexfireMutations, firestoreAction } from 'vuexfire'
 import { db } from '../plugins/firebase';
 
-const store = () => {
-    return new Vuex.Store({
-        state: () => ({
+
+        export const state = () => ({
             notes: [],
             isLoggedIn: false,
             user: null,
             userData: null,
-        }),
-        mutations: {
+        })
+        export const mutations = {
             ...vuexfireMutations,
-        },
-        actions: {
+            setLogin(state, user) {
+                state.isLoggedIn = true
+                state.user = user;
+            },
+            setUserData(state, userData) {
+                state.userData = userData
+            },
+        }
+        export const actions = {
             setNotesRef: firestoreAction(({ bindFirestoreRef }, ref) => {
                 bindFirestoreRef('notes', ref)
             }),
@@ -21,15 +27,19 @@ const store = () => {
                 bindFirestoreRef('users', ref)
             }),
             successedLogin (store, user) {
-                store.state.isLoggedIn = true;
-                store.state.user = user;
-                db.collection('users').doc(store.state.user.uid).get().then((doc) => {
+
+                const pickUserdata = {
+                    uid: user.uid,
+                    photoURL: user.photoURL,
+                    displayName: user.displayName
+                }
+                store.commit('setLogin', pickUserdata);
+                db.collection('users').doc(pickUserdata.uid).get().then((doc) => {
                     if (doc.exists) {
-                        console.log('ドキュメントあったお', doc.data());
-                        store.state.userData = doc.data();
+                        const data = doc.data().data;
+                        store.commit('setUserData', data);
                     } else {
                         console.log('なかったお');
-                        store.state.userData = null;
                     }
                 }).catch((err) => {
                     console.log(err);
@@ -70,8 +80,8 @@ const store = () => {
                     console.log('エラーだぞ', error);
                 })
             }
-        },
-        getters: {
+        }
+        export const getters = {
             getNotes: (state) => {
                 return state.notes
             },
@@ -84,8 +94,5 @@ const store = () => {
             getUserData: (state) => {
                 return state.userData;
             }
-        },
-    })
-}
-
-export default store
+        }
+// export default store
