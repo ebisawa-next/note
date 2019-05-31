@@ -1,5 +1,5 @@
 import { vuexfireMutations, firestoreAction } from 'vuexfire'
-
+import { db } from '../plugins/firebase';
 export const state = () => ({
     notes: [],
 })

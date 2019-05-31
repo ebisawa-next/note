@@ -1,10 +1,12 @@
 import { vuexfireMutations, firestoreAction } from 'vuexfire'
 import { db } from '../plugins/firebase';
 
+const users = db.collection('users')
+
 export const state = () => ({
     isLoggedIn: false,
-    user: null,
-    userData: null,
+    user: [],
+    users: [],
 })
 export const mutations = {
     ...vuexfireMutations,
@@ -12,17 +14,17 @@ export const mutations = {
         state.isLoggedIn = true
         state.user = user;
     },
-    setUserData(state, userData) {
-        state.userData = userData
-    },
+    // setUsers(state, users) {
+    //     state.users = users
+    // },
     setLogout(state) {
         state.isLoggedIn = false
         state.user = null
     }
 }
 export const actions = {
-    setUserdataRef: firestoreAction(({ bindFirestoreRef }, ref) => {
-        bindFirestoreRef('users', ref)
+    initStore: firestoreAction(({ bindFirestoreRef }, payload) => {
+        bindFirestoreRef('users', users)
     }),
     successedLogin (store, user) {
         const pickUserdata = {
@@ -31,10 +33,13 @@ export const actions = {
             displayName: user.displayName
         }
         store.commit('setLogin', pickUserdata);
-        db.collection('users').doc(pickUserdata.uid).get().then((doc) => {
+
+        // user情報をセットする
+        users.doc(pickUserdata.uid).get().then((doc) => {
             if (doc.exists) {
-                const data = doc.data().data;
-                store.commit('setUserData', data);
+                const data = doc.data();
+                console.log(data);
+                // store.commit('setUsers', data);
             } else {
                 console.log('なかったお');
             }
@@ -54,7 +59,7 @@ export const getters = {
     getUser: (state) => {
         return state.user;
     },
-    getUserData: (state) => {
-        return state.userData;
+    getUsers: (state) => {
+        return state.users
     }
 }

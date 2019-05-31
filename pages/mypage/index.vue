@@ -10,6 +10,10 @@
             </div>
 
             <table class="information">
+                <tr v-if="users">
+                    <th>data</th>
+                    <td><p>{{ users }}</p></td>
+                </tr>
                 <tr>
                     <th>user name</th>
                     <td>{{ user.displayName }}</td>
@@ -17,10 +21,6 @@
                 <tr>
                     <th>photo</th>
                     <td><img :src="user.photoURL"></td>
-                </tr>
-                <tr v-if="userData">
-                    <th>data</th>
-                    <td><p>{{ userData }}</p></td>
                 </tr>
             </table>
         </div>
@@ -43,18 +43,22 @@ export default {
         ...mapGetters({
             isLoggedIn: 'users/getLoggedIn',
             user: 'users/getUser',
-            userData: 'users/getUserData',
-        })
+            users: 'users/getUsers',
+        }),
     },
     mounted () {
-        this.$store.dispatch('users/setUserdataRef', db.collection('users'))
         auth().onAuthStateChanged( (user) => {
             if (user) {
                 this.$store.dispatch('users/successedLogin', user);
+                this.$store.dispatch('users/initStore', {
+                    userId: this.user.uid
+                })
             } else {
                 this.$store.dispatch('users/failedLogin', user);
             }
         })
+    },
+    created () {
     },
     methods: {
         saveData (newData) {
@@ -65,7 +69,7 @@ export default {
                 data: newData
             }).then(() => {
                 this.newData = '';
-                console.log('success');
+                console.log('saved');
             }).catch((err) => {
                 console.log('error', err)
             })
