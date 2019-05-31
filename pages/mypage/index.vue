@@ -20,7 +20,7 @@
                 </tr>
                 <tr v-if="userData">
                     <th>data</th>
-                    <td><p>{{userData}}</p></td>
+                    <td><p>{{ userData }}</p></td>
                 </tr>
             </table>
         </div>
@@ -41,22 +41,18 @@ export default {
     },
     computed: {
         ...mapGetters({
-            isLoggedIn: 'getLoggedIn',
-            user: 'getUser',
-            userData: 'getUserData',
-            notes: 'getNotes'
+            isLoggedIn: 'users/getLoggedIn',
+            user: 'users/getUser',
+            userData: 'users/getUserData',
         })
     },
     mounted () {
-        this.$store.dispatch('setUserdataRef', db.collection('users'))
-        console.log(this.userData)
-        console.log(this.notes)
-        this.$store.dispatch('setNotesRef', db.collection('notes'))
+        this.$store.dispatch('users/setUserdataRef', db.collection('users'))
         auth().onAuthStateChanged( (user) => {
             if (user) {
-                this.$store.dispatch('successedLogin', user);
+                this.$store.dispatch('users/successedLogin', user);
             } else {
-                this.$store.dispatch('failedLogin', user);
+                this.$store.dispatch('users/failedLogin', user);
             }
         })
     },

@@ -31,15 +31,15 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({ notes: 'getNotes', isLoggedIn: 'getLoggedIn', user: 'getUser' })
+    ...mapGetters({ notes: 'getNotes', isLoggedIn: 'users/getLoggedIn', user: 'users/getUser' })
   },
   mounted () {
     this.$store.dispatch('setNotesRef', db.collection('notes'))
     auth().onAuthStateChanged( (user) => {
       if (user) {
-        this.$store.dispatch('successedLogin', user);
+        this.$store.dispatch('users/successedLogin', user);
       } else {
-        this.$store.dispatch('failedLogin', user);
+        this.$store.dispatch('users/failedLogin', user);
       }
     })
   },
