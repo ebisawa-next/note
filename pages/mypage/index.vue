@@ -66,6 +66,7 @@ export default {
                 return;
             }
             db.collection('users').doc(this.user.uid).set({
+                uid: this.user.uid,
                 data: newData
             }).then(() => {
                 this.newData = '';

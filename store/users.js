@@ -24,7 +24,9 @@ export const mutations = {
 }
 export const actions = {
     initStore: firestoreAction(({ bindFirestoreRef }, payload) => {
-        bindFirestoreRef('users', users)
+        // 渡されたuseridと等しいドキュメントのデータとバインディングしたい
+        console.log(payload.userId);
+        bindFirestoreRef('users', users.where('uid', '==', payload.userId))
     }),
     successedLogin (store, user) {
         const pickUserdata = {
@@ -38,7 +40,6 @@ export const actions = {
         users.doc(pickUserdata.uid).get().then((doc) => {
             if (doc.exists) {
                 const data = doc.data();
-                console.log(data);
                 // store.commit('setUsers', data);
             } else {
                 console.log('なかったお');
