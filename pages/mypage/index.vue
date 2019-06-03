@@ -1,9 +1,9 @@
 <template>
     <section class="container">
         <h1>くそマイページ</h1>
-
-        <div v-if="isLoggedIn">
-            <p v-if="isLoggedIn" class="login" @click="googleLogout">ログアウトする</p>
+        {{ isSignedIn }}
+        <div v-if="isSignedIn">
+            <p v-if="isSignedIn" class="login" @click="googleSignOut">ログアウトする</p>
             <div class="forms">
                 <input type="text" v-model="newNickname" class="form" placeholder="ほげほげほげ" />
                 <p class="sendButton" @click="saveNickname(newNickname)">ニックネームを更新する</p>
@@ -12,22 +12,23 @@
             <table class="information">
                 <tr>
                     <th>ニックネーム</th>
-                    <td>
-                        <p v-for="(user, index) in users" :key="index">{{ user.nickname }}</p>
-                        <!-- <p>{{ users.nickname }}</p> -->
-                    </td>
+                    <td>{{ userdata.nickname }}</td>
+                </tr>
+                <tr>
+                    <th>なまえ</th>
+                    <td>{{ userdata.name }}</td>
                 </tr>
                 <tr>
                     <th>user name</th>
-                    <td>{{ user.displayName }}</td>
+                    <td>{{ userdata.email}}</td>
                 </tr>
                 <tr>
                     <th>photo</th>
-                    <td><img :src="user.photoURL"></td>
+                    <td><img :src="userdata.photo"></td>
                 </tr>
             </table>
         </div>
-        <p v-else class="login" @click="googleLogin">ログインする</p>
+        <p v-else class="login" @click="googleSignIn">ログインする</p>
 
         <nuxt-link to="/">戻るよ</nuxt-link>
     </section>
@@ -45,52 +46,32 @@ export default {
     },
     computed: {
         ...mapGetters({
-            isLoggedIn: 'users/getLoggedIn',
-            user: 'users/getUser',
-            users: 'users/getUsers',
+            isSignedIn: 'users/getSignStatus',
+            userdata: 'users/getUserdata'
         }),
     },
     mounted () {
-        auth().onAuthStateChanged( (user) => {
-            if (user) {
-                this.$store.dispatch('users/successedLogin', user);
-                this.$store.dispatch('users/initStore', {
-                    userId: this.user.uid
-                })
-            } else {
-                this.$store.dispatch('users/failedLogin', user);
-            }
-        })
+        this.$store.dispatch('users/googleAuthStateChanged');
     },
     created () {
     },
     methods: {
+        googleSignIn () {
+            this.$store.dispatch('users/googleSignIn');
+        },
+        googleSignOut () {
+            this.$store.dispatch('users/googleSignOut');
+        },
         saveNickname (newNickname) {
             if(newNickname.length == 0) {
                 return;
             }
-            db.collection('users').doc(this.user.uid).set({
-                uid: this.user.uid,
+            const payload = {
                 nickname: newNickname
-            }).then(() => {
-                this.newNickname = '';
-                console.log('saved');
-            }).catch((err) => {
-                console.log('error', err)
-            })
-        },
-
-        googleLogin () {
-            auth().signInWithRedirect(new auth.GoogleAuthProvider())
-        },
-        googleLogout () {
-            auth().signOut().then( () => {
-                this.isLoggedIn = false
-                this.user = null
-            }).catch( (error) => {
-                console.log(error)
-            })
-        },
+            }
+            this.$store.dispatch('users/saveNickname', payload);
+            this.newNickname = '';
+        }
     },
 }
 </script>
