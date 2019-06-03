@@ -1,17 +1,17 @@
 <template>
   <section class="container">
-    <div v-if="isLoggedIn">
-        <p>ようこそ{{ user.displayName }}</p>
+    <div v-if="isSignedIn">
+        <p>ようこそ{{ userdata.name }}</p>
         <nuxt-link to="/mypage">マイページに行こう</nuxt-link>
     </div>
-    <p v-else class="login" @click="googleLogin">ログイン</p>
+    <p v-else class="login" @click="googleSignIn">ログイン</p>
     <h1>くそフォーム</h1>
     <div class="forms">
       <input type="text" v-model="newNote" class="form" @keyup.enter="saveNote" placeholder="ほげほげほげ" />
       <p class="sendButton" @click="saveNote">送る</p>
     </div>
       <h1>くそにっき</h1>
-      <p v-if="isLoggedIn">{{ user.displayName }}のくそにっき</p>
+      <p v-if="isSignedIn">{{ userdata.name }}のくそにっき</p>
       <p v-else>名無し</p>
       <ul>
         <li v-for="(note, index) in notes" :key="index">
@@ -31,18 +31,15 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({ notes: 'getNotes', isLoggedIn: 'users/getLoggedIn', user: 'users/getUser' })
+    ...mapGetters({
+      notes: 'getNotes',
+      isSignedIn: 'users/getSignStatus',
+      userdata: 'users/getUserdata'
+    }),
   },
   mounted () {
     this.$store.dispatch('setNotesRef', db.collection('notes'))
-    console.log(this.notes)
-    auth().onAuthStateChanged( (user) => {
-      if (user) {
-        this.$store.dispatch('users/successedLogin', user);
-      } else {
-        this.$store.dispatch('users/failedLogin', user);
-      }
-    })
+    this.$store.dispatch('users/googleAuthStateChanged');
   },
   methods: {
     saveNote () {
@@ -56,16 +53,11 @@ export default {
       this.newNote = ''
       db.collection('notes').add(newNote)
     },
-    googleLogin () {
-      auth().signInWithRedirect(new auth.GoogleAuthProvider())
+    googleSignIn () {
+      this.$store.dispatch('users/googleSignIn');
     },
-    googleLogout () {
-      auth().signOut().then( () => {
-        this.isLoggedIn = false
-        this.user = null
-      }).catch( (error) => {
-        console.log(error)
-      })
+    googleSignOut () {
+      this.$store.dispatch('users/googleSignOut');
     },
   },
 }
