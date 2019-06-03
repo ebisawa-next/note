@@ -10,6 +10,10 @@ export const actions = {
     setNotesRef: firestoreAction(({ bindFirestoreRef }, ref) => {
         bindFirestoreRef('notes', ref)
     }),
+
+    saveNote ({ dispatch }, newNote) {
+        db.collection('notes').add(newNote);
+    }
 }
 export const getters = {
     getNotes: (state) => {

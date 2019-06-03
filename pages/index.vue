@@ -50,8 +50,8 @@ export default {
         content: this.newNote,
         name: this.user ? this.user.displayName : 'Anonymous'
       }
+      this.$store.dispatch('saveNote', newNote);
       this.newNote = ''
-      db.collection('notes').add(newNote)
     },
     googleSignIn () {
       this.$store.dispatch('users/googleSignIn');
