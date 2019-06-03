@@ -14,9 +14,6 @@ export const mutations = {
         state.isLoggedIn = true
         state.user = user;
     },
-    // setUsers(state, users) {
-    //     state.users = users
-    // },
     setLogout(state) {
         state.isLoggedIn = false
         state.user = null
@@ -35,18 +32,6 @@ export const actions = {
             displayName: user.displayName
         }
         store.commit('setLogin', pickUserdata);
-
-        // user情報をセットする
-        users.doc(pickUserdata.uid).get().then((doc) => {
-            if (doc.exists) {
-                const data = doc.data();
-                // store.commit('setUsers', data);
-            } else {
-                console.log('なかったお');
-            }
-        }).catch((err) => {
-            console.log(err);
-        })
     },
     failedLogin (store) {
         store.state.isLoggedIn = false;
@@ -61,6 +46,6 @@ export const getters = {
         return state.user;
     },
     getUsers: (state) => {
-        return state.users
+        return state.users;
     }
 }

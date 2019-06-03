@@ -35,6 +35,7 @@ export default {
   },
   mounted () {
     this.$store.dispatch('setNotesRef', db.collection('notes'))
+    console.log(this.notes)
     auth().onAuthStateChanged( (user) => {
       if (user) {
         this.$store.dispatch('users/successedLogin', user);

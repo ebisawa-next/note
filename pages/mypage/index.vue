@@ -5,14 +5,17 @@
         <div v-if="isLoggedIn">
             <p v-if="isLoggedIn" class="login" @click="googleLogout">ログアウトする</p>
             <div class="forms">
-                <input type="text" v-model="newData" class="form" placeholder="ほげほげほげ" />
-                <p class="sendButton" @click="saveData(newData)">dataを送る</p>
+                <input type="text" v-model="newNickname" class="form" placeholder="ほげほげほげ" />
+                <p class="sendButton" @click="saveNickname(newNickname)">ニックネームを更新する</p>
             </div>
 
             <table class="information">
-                <tr v-if="users">
-                    <th>data</th>
-                    <td><p>{{ users }}</p></td>
+                <tr>
+                    <th>ニックネーム</th>
+                    <td>
+                        <p v-for="(user, index) in users" :key="index">{{ user.nickname }}</p>
+                        <!-- <p>{{ users.nickname }}</p> -->
+                    </td>
                 </tr>
                 <tr>
                     <th>user name</th>
@@ -33,10 +36,11 @@
 <script>
 import { mapGetters } from 'vuex'
 import { db, auth } from '@/plugins/firebase'
+import firebase from 'firebase'
 export default {
     data () {
         return {
-            newData: '',
+            newNickname: '',
         }
     },
     computed: {
@@ -61,15 +65,15 @@ export default {
     created () {
     },
     methods: {
-        saveData (newData) {
-            if(newData.length == 0) {
+        saveNickname (newNickname) {
+            if(newNickname.length == 0) {
                 return;
             }
             db.collection('users').doc(this.user.uid).set({
                 uid: this.user.uid,
-                data: newData
+                nickname: newNickname
             }).then(() => {
-                this.newData = '';
+                this.newNickname = '';
                 console.log('saved');
             }).catch((err) => {
                 console.log('error', err)
