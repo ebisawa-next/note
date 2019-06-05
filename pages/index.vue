@@ -1,5 +1,6 @@
 <template>
   <section class="container">
+    <h1 class="heading">変数テスト</h1>
     <div v-if="isSignedIn">
         <p>ようこそ{{ userdata.name }}</p>
         <nuxt-link to="/mypage">マイページに行こう</nuxt-link>
@@ -63,35 +64,45 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+.heading {
+  color: $orange;
+  font-weight: bold;
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
 .container {
-  width: 1000px;
-  margin: 0 auto;
-  padding: 100px 0;
+    width: 1000px;
+    margin: 0 auto;
+    padding: 100px 0;
 }
+
 .forms {
-  display: flex;
-  margin: 10px 0 30px;
-}
-.forms .form {
-  padding: 10px;
-  border-radius: 4px;
-  border: 1px solid #d8d8d8;
-}
-.forms .sendButton {
-  background-color: #ed6103;
-  color: #fff;
-  padding: 10px;
-  border-radius: 4px;
-  margin-left: 10px;
+    display: flex;
+    margin: 10px 0 30px;
+
+    .form {
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid #d8d8d8;
+    }
+
+    .sendButton {
+        background-color: #ed6103;
+        color: #fff;
+        padding: 10px;
+        border-radius: 4px;
+        margin-left: 10px;
+    }
 }
 
 .login {
-  padding: 10px;
-  background-color: #ffab00;
-  border-radius: 4px;
-  display: inline-flex;
+    padding: 10px;
+    background-color: #ffab00;
+    border-radius: 4px;
+    display: inline-flex;
 }
+
 
 </style>
 

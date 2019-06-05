@@ -76,7 +76,39 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+.container {
+    width: 1000px;
+    margin: 0 auto;
+    padding: 100px 0;
+}
+
+.forms {
+    display: flex;
+    margin: 10px 0 30px;
+
+    .form {
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid #d8d8d8;
+    }
+
+    .sendButton {
+        background-color: #ed6103;
+        color: #fff;
+        padding: 10px;
+        border-radius: 4px;
+        margin-left: 10px;
+    }
+}
+
+.login {
+    padding: 10px;
+    background-color: #ffab00;
+    border-radius: 4px;
+    display: inline-flex;
+}
+
 .information {
     margin-top: 20px;
 }

@@ -35,5 +35,15 @@ module.exports = {
         })
       }
     }
+  },
+
+  /*
+   ** Nuxt.js modules
+   */
+  modules: ['@nuxtjs/style-resources'],
+  styleResources: {
+    scss: [
+      '~/assets/scss/common.scss'
+    ]
   }
 }
