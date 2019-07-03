@@ -19,6 +19,10 @@ html {
 *, *:before, *:after {
   box-sizing: border-box;
   margin: 0;
+  padding: 0;
+}
+ul, dl, li, dd, dt {
+  list-style: none;
 }
 
 .button--green {
