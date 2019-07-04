@@ -1,13 +1,12 @@
 <template>
     <div v-if="isSignedIn" class="signin">
-        <p class="signin-photo-wrap">
+        <p class="signin-photo-wrap" @click="changeInfos">
             <img class="signin-photo" :src="userdata.photo">
         </p>
-        <ul class="signin-infos">
+        <ul class="signin-infos" v-if="isInfosShow">
             <li class="signin-infos-info">
                 <p class="signin-infos-username"
                     v-text="userdata.nickname ? userdata.nickname : userdata.name"></p>
-                    <!-- <span v-if="userdata.nickname">{{ userdata.nickname }} -->
             </li>
             <li class="signin-infos-info is-link">
                 <nuxt-link to="/mypage" class="signin-infos-link">
@@ -40,6 +39,7 @@ export default {
     },
     data () {
         return {
+            isInfosShow: false
         }
     },
     props: {
@@ -72,6 +72,9 @@ export default {
         googleSignOut () {
             this.$store.dispatch('users/googleSignOut');
         },
+        changeInfos () {
+            this.isInfosShow = !this.isInfosShow;
+        }
     }
 }
 </script>
@@ -100,9 +103,43 @@ export default {
         }
     }
 }
+.signin {
+    position: relative;
+    &-infos {
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+    }
+}
 .signin-infos {
     min-width: 200px;
     border: 1px solid #d8d8d8;
+    border-radius: 4px;
+    background-color: map-get($color-service, base);
+    $white: map-get($color-service, base);
+    $smoke: map-get($color-service, border);
+    &::before {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 10px 9.3px 10px;
+        right: 10px;
+        border-color: transparent transparent $smoke transparent;
+        top: -10px;
+    }
+    &::after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 10px 9.3px 10px;
+        right: 10px;
+        border-color: transparent transparent $white transparent;
+        top: -8px;
+    }
     &-info {
         padding: 10px;
         font-size: 1.5rem;

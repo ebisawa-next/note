@@ -1,8 +1,8 @@
 <template>
   <div>
-    <Header />  
+    <Header />
+    <Hero />
     <section class="container">  
-      <h1 class="heading">変数テスト</h1>
       <div v-if="isSignedIn">
           <p>ようこそ{{ userdata.name }}</p>
           <nuxt-link to="/mypage">マイページに行こう</nuxt-link>
@@ -30,6 +30,7 @@ import { mapGetters } from 'vuex'
 import { db, auth } from '../plugins/firebase'
 
 import Header from '@/components/organisms/common/header'
+import Hero from '@/components/molecules/blocks/Hero'
 export default {
   data () {
     return {
@@ -37,7 +38,7 @@ export default {
     }
   },
   components: {
-    Header
+    Header, Hero
   },
   computed: {
     ...mapGetters({
@@ -73,14 +74,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.heading {
-  color: $orange;
-  font-weight: bold;
-  font-size: 2rem;
-  margin-bottom: 10px;
-}
 .container {
-    width: 1000px;
+    width: 80%;
     margin: 0 auto;
     padding: 50px 0;
 }
