@@ -1,9 +1,88 @@
 <template>
-    <section class="container">
-        <h1>くそマイページ</h1>
-        {{ isSignedIn }}
-        <div v-if="isSignedIn">
-            <p v-if="isSignedIn" class="login" @click="googleSignOut">ログアウトする</p>
+    <div>
+        <Header />
+        <section class="user-header"></section>
+        <section class="container" v-if="isSignedIn">
+            <aside class="users">
+                <figure class="users-photo">
+                    <img :src="userdata.photo" class="users-photo-image">
+                    <figcaption >
+                        <p class="users-photo-name">{{ userName }}</p>
+                        <p class="users-photo-caption">最近あったことをつらつらと書き連ねるスペースです。今日も1日頑張るぞい</p>
+                    </figcaption>
+                </figure>
+            </aside>
+            <article class="timelines">
+                <ul class="timelines-items">
+                    <li class="timelines-items-item">
+                        <div class="timelines-tweet-head">
+                            <p class="timelines-tweet-head-name">{{ userName }}</p>
+                            <time class="timelines-tweet-head-time">2019/12/01 12:00</time>
+                        </div>
+                        <p class="timelines-tweet-text">ほげほげほげ</p>
+                        <ul class="timelines-actions">
+                            <li class="timelines-actions-action">
+                                はーと
+                            </li>
+                            <li class="timelines-actions-action">
+                                こめんと
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="timelines-items-item">
+                        <div class="timelines-tweet-head">
+                            <p class="timelines-tweet-head-name">{{ userName }}</p>
+                            <time class="timelines-tweet-head-time">2019/12/01 12:00</time>
+                        </div>
+                        <p class="timelines-tweet-text">ほげほげほげ</p>
+                        <ul class="timelines-actions">
+                            <li class="timelines-actions-action">
+                                はーと
+                            </li>
+                            <li class="timelines-actions-action">
+                                こめんと
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="timelines-items-item">
+                        <div class="timelines-tweet-head">
+                            <p class="timelines-tweet-head-name">{{ userName }}</p>
+                            <time class="timelines-tweet-head-time">2019/12/01 12:00</time>
+                        </div>
+                        <p class="timelines-tweet-text">ほげほげほげ</p>
+                        <ul class="timelines-actions">
+                            <li class="timelines-actions-action">
+                                はーと
+                            </li>
+                            <li class="timelines-actions-action">
+                                こめんと
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="timelines-items-item">
+                        <div class="timelines-tweet-head">
+                            <p class="timelines-tweet-head-name">{{ userName }}</p>
+                            <time class="timelines-tweet-head-time">2019/12/01 12:00</time>
+                        </div>
+                        <p class="timelines-tweet-text">ほげほげほげ</p>
+                        <ul class="timelines-actions">
+                            <li class="timelines-actions-action">
+                                はーと
+                            </li>
+                            <li class="timelines-actions-action">
+                                こめんと
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </article>
+
+
+
+
+
+        </section>
+
             <div class="forms">
                 <input type="text" v-model="newNickname" class="form" placeholder="ほげほげほげ" />
                 <p class="sendButton" @click="saveNickname(newNickname)">ニックネームを更新する</p>
@@ -19,7 +98,7 @@
                     <td>{{ userdata.name }}</td>
                 </tr>
                 <tr>
-                    <th>user name</th>
+                    <th>email</th>
                     <td>{{ userdata.email}}</td>
                 </tr>
                 <tr>
@@ -27,18 +106,22 @@
                     <td><img :src="userdata.photo"></td>
                 </tr>
             </table>
-        </div>
-        <p v-else class="login" @click="googleSignIn">ログインする</p>
-
-        <nuxt-link to="/">戻るよ</nuxt-link>
-    </section>
+        <Footer />
+    </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import { db, auth } from '@/plugins/firebase'
 import firebase from 'firebase'
+
+// components
+import Header from '@/components/organisms/common/header'
+import Footer from '@/components/organisms/common/footer'
 export default {
+    components: {
+        Header, Footer
+    },
     data () {
         return {
             newNickname: '',
@@ -49,6 +132,10 @@ export default {
             isSignedIn: 'users/getSignStatus',
             userdata: 'users/getUserdata'
         }),
+        userName: function () {
+            if(!this.userdata) return '';
+            return this.userdata.nickname ? this.userdata.nickname : this.userdata.name;
+        }
     },
     mounted () {
         this.$store.dispatch('users/googleAuthStateChanged');
@@ -78,10 +165,96 @@ export default {
 
 <style lang="scss" scoped>
 .container {
-    width: 1000px;
-    margin: 0 auto;
-    padding: 100px 0;
+    display: flex;
+    flex-direction: column;
+    @include mq {
+        width: 80%;
+        margin: 0 auto;
+        flex-direction: row;
+    }
 }
+.user-header {
+    display: block;
+    height: 300px;
+    background:
+        color-gradient(.9),
+        url(~assets/images/index/sushi.jpg);
+    background-size: cover;
+    background-attachment: fixed;
+}
+.timelines {
+    position: relative;
+    flex: 1;
+    &-items-item {
+        width: 100%;
+        padding: 20px;
+        box-sizing: border-box;
+        &:not(:first-child) {
+            border-top: 1px solid map-get($color-service, border);
+        }
+    }
+    &-tweet {
+        &-text {
+            font-size: 1.8rem;
+            padding: 10px 0;
+        }
+        &-head {
+            display: flex;
+            justify-content: space-between;
+            &-name {
+                font-size: 1.4rem;
+                font-weight: bold;
+            }
+            &-time {
+                font-size: 1.2rem;
+                color: #a5a5a5;
+            }
+        }
+    }
+    &-actions {
+        display: flex;
+        &-action {
+            &:not(:first-child) {
+                margin-left: 10px;
+            }
+        }
+    }
+}
+.users {
+    width: 250px;
+    box-sizing: border-box;
+    padding: 0 10px;
+    background-color: #f5f5f5;
+    position: relative;
+    &-photo {
+        position: absolute;
+        top: -90px;
+        left: calc(50% - 90px);
+        width: 180px;
+        height: 180px;
+        &-image {
+            border-radius: 50%;
+            border: 4px solid #fff;
+            width: 100%;
+            height: 100%;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, .3);
+        }
+        &-name {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        &-caption {
+            font-size: 1.4rem;
+            margin-top: 15px;
+        }
+
+    }
+}
+
+.heading {
+    font-size: 2.4rem;
+}
+
 
 .forms {
     display: flex;

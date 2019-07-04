@@ -10,7 +10,13 @@
             </li>
             <li class="signin-infos-info is-link">
                 <nuxt-link to="/mypage" class="signin-infos-link">
-                    プロフィール
+                    マイページ
+                </nuxt-link>
+            </li>
+            <li class="signin-infos-info is-link">
+                <nuxt-link to="/mypage" class="signin-infos-link">
+                    <span class="signin-infos-link-icon"><Function size="14" color="sushi" /></span>
+                    <span>設定変更</span>
                 </nuxt-link>
             </li>
             <li class="signin-infos-info is-link">
@@ -33,9 +39,10 @@
 import { mapGetters } from 'vuex'
 import { db, auth } from '@/plugins/firebase'
 import Shadow from '@/components/atoms/buttons/shadow'
+import Function from '@/components/atoms/icons/function'
 export default {
     components: {
-        Shadow
+        Shadow, Function
     },
     data () {
         return {
@@ -116,6 +123,7 @@ export default {
     border: 1px solid #d8d8d8;
     border-radius: 4px;
     background-color: map-get($color-service, base);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, .3);
     $white: map-get($color-service, base);
     $smoke: map-get($color-service, border);
     &::before {
@@ -156,13 +164,17 @@ export default {
     font-weight: bold;
 }
 .signin-infos-link {
-    display: block;
+    display: flex;
+    align-items: center;
     font-size: 1.4rem;
     text-decoration: none;
     padding: 10px;
     color: inherit;
     @include hover-transition(.1s) {
         color: map-get($color-service, accent);
+    }
+    &-icon {
+        margin-right: 5px;
     }
 }
 </style>

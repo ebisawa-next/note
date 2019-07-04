@@ -22,6 +22,7 @@
           </li>
         </ul>
     </section>
+    <Footer />
   </div>
 </template>
 
@@ -30,6 +31,7 @@ import { mapGetters } from 'vuex'
 import { db, auth } from '../plugins/firebase'
 
 import Header from '@/components/organisms/common/header'
+import Footer from '@/components/organisms/common/footer'
 import Hero from '@/components/molecules/blocks/Hero'
 export default {
   data () {
@@ -38,7 +40,7 @@ export default {
     }
   },
   components: {
-    Header, Hero
+    Header, Hero, Footer
   },
   computed: {
     ...mapGetters({

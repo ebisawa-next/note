@@ -1,6 +1,8 @@
 <template>
   <header class="header">
-    <Logo />
+    <nuxt-link to="/" class="header-logo-link">
+      <Logo />
+    </nuxt-link>
     <!-- 多分このリンクもパーツ化すべき -->
     <!-- <ul class="header-links">
       <li class="header-links-link" v-for="(link, index) in links" :key="index">
@@ -56,6 +58,14 @@ export default {
   left: 0;
   right: 0;
   background-color: map-get($color-service, base);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
+  z-index: 100;
+  &-logo-link {
+    text-decoration: none;
+    @include hover-transition {
+      opacity: .8;
+    }
+  }
 }
 .header-links {
   display: flex;
