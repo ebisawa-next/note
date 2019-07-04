@@ -1,21 +1,22 @@
 <template>
   <header class="header">
-    <Logo color="white" />
-    <ul class="header-links">
+    <Logo />
+    <!-- 多分このリンクもパーツ化すべき -->
+    <!-- <ul class="header-links">
       <li class="header-links-link" v-for="(link, index) in links" :key="index">
         <a :href="link.url" class="header-links-text">{{ link.text }}</a>
       </li>
-    </ul>
-    <Function size="20" />
+    </ul> -->
+    <LoginStatus />
   </header>
 </template>
 x
 <script>
 import Logo from '@/components/atoms/icons/common/logo'
-import Function from '@/components/atoms/icons/function'
+import LoginStatus from '@/components/molecules/common/loginStatus'
 export default {
   components: {
-    Logo, Function
+    Logo, LoginStatus
   },
   data () {
     return {
@@ -49,8 +50,12 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 10px;
-  background-color: map-get($color-service, accent);
+  padding: 10px;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: map-get($color-service, base);
 }
 .header-links {
   display: flex;

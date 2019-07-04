@@ -1,0 +1,15 @@
+/*---------------------------------------
+ * media Query
+---------------------------------------*/
+$breakpoints: (
+    "sp": "screen and (max-width: 480px)",
+    "tb": "screen and (min-width: 481px) and (max-width: 768px)",
+    "tbAndSp": "screen and (max-width: 768px)",
+    "tbAndPc": "screen and (min-width: 481px)",
+    "pc": "screen and (min-width: 769px)",
+) !default;
+@mixin mq($breakpoint: pc) {
+    @media #{map-get($breakpoints, $breakpoint)} {
+        @content;
+    }
+}

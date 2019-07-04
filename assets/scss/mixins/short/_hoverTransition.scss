@@ -1,0 +1,8 @@
+@mixin hover-transition($time: .15s) {
+    $time: unquote($time);
+    transition: $time;
+    &:hover {
+        cursor: pointer;
+        @content;
+    }
+}
