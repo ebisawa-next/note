@@ -11,6 +11,7 @@ export const state = () => ({
     userNickname: null,
     isSignedIn: false,
     noAccount: false,
+    userTweet: [],
 })
 export const mutations = {
     ...vuexfireMutations,
@@ -27,18 +28,21 @@ export const mutations = {
         state.userNickname = null
         state.isSignedIn = false
         state.noAccount = true
+        state.userTweet = null
     },
     saveNickname (state, payload) {
         state.userNickname = payload.nickname;
+    },
+    saveTweet (state, payload) {
+        state.userTweet.push(payload.tweet);
     }
 }
 export const actions = {
     initStore: firestoreAction(({ bindFirestoreRef }, payload) => {
         // 渡されたuseridと等しいドキュメントのデータとバインディングしたい
         console.log(payload.userEmail);
-        bindFirestoreRef('users', users.where('userEmail', '==', payload.userEmail))
+        bindFirestoreRef('users', users.where('userEmail', '==', payload.userEmail));
     }),
-
     googleSignIn ({ dispatch }) {
         firebase.auth().signInWithRedirect(new firebase.auth.GoogleAuthProvider())
         dispatch('googleAuthStateChanged')
@@ -60,16 +64,31 @@ export const actions = {
     },
     userCheck ({ dispatch, commit, state }) {
         db.collection('users').doc(state.userEmail).get().then((doc) => {
-        if (doc.exists) {
-            console.log("Document data:", doc.data())
-            commit('saveNickname', doc.data().data)
-        } else {
-            console.log("No such document!")
-            dispatch('createUser')
-        }
+            if (doc.exists) {
+                console.log("Document data:", doc.data())
+                commit('saveNickname', doc.data().data)
+            } else {
+                console.log("No such document!")
+                dispatch('createUser')
+            }
         }).catch((error) => {
             console.error("Error getting document:", error)
         })
+                const tweet = {
+                  tweet: '寿司'
+                };
+                commit('saveTweet', tweet);
+
+        const tweetDB = db.collection('users').doc(state.userEmail).collection('tweet');
+        tweetDB.get().then((doc) => {
+            console.log(doc);
+            if(doc.exists) {
+                console.log(doc.data())
+
+            }
+        }).catch((error) => {
+            console.error("Error getting document:", error)
+        });
     },
     createUser ({ state, commit }) {
         const data = {
@@ -80,7 +99,7 @@ export const actions = {
             commit('saveNickname', data)
         }).catch((error) => {
             console.error("Error writing document: ", error);
-        })
+        });
     },
     saveNickname ({ state, commit }, payload) {
         const data = {
@@ -89,6 +108,17 @@ export const actions = {
         db.collection('users').doc(state.userEmail).set({ data }).then(() => {
             console.log('db saved')
             commit('saveNickname', data);
+        }).catch((error) => {
+            console.error("Error writing document: ", error);
+        })
+    },
+    saveTweet ({ state, commit }, payload) {
+        const tweet = {
+            tweet: payload.tweet
+        }
+        db.collection('users').doc(state.userEmail).collection('tweet').add({ tweet }).then(() => {
+            console.log('db saved')
+            commit('saveTweet', tweet);
         }).catch((error) => {
             console.error("Error writing document: ", error);
         })
@@ -103,7 +133,8 @@ export const getters = {
             email: state.userEmail,
             name: state.userName,
             photo: state.userPhoto,
-            nickname: state.userNickname
+            nickname: state.userNickname,
+            tweet: state.userTweet
         }
         return data;
     }

@@ -1,6 +1,11 @@
 <template>
     <div>
         <Header />
+        <div class="forms">
+            <textarea type="text" v-model="newTweet" class="textarea" placeholder="ほげほげほげ" />
+            <p class="sendButton" @click="saveTweet(newTweet)">つぶやく</p>
+        </div>
+
         <section class="user-header"></section>
         <section class="container" v-if="isSignedIn">
             <aside class="users">
@@ -13,6 +18,7 @@
                 </figure>
             </aside>
             <article class="timelines">
+                {{ userdata.tweet }}
                 <ul class="timelines-items">
                     <li class="timelines-items-item">
                         <div class="timelines-tweet-head">
@@ -76,11 +82,6 @@
                     </li>
                 </ul>
             </article>
-
-
-
-
-
         </section>
 
             <div class="forms">
@@ -125,6 +126,7 @@ export default {
     data () {
         return {
             newNickname: '',
+            newTweet: '',
         }
     },
     computed: {
@@ -148,6 +150,15 @@ export default {
         },
         googleSignOut () {
             this.$store.dispatch('users/googleSignOut');
+        },
+
+        saveTweet (newTweet) {
+            if(newTweet.length == 0) return;
+            const payload = {
+                tweet: newTweet,
+            }
+            this.$store.dispatch('users/saveTweet', payload);
+            this.newTweet = '';
         },
         saveNickname (newNickname) {
             if(newNickname.length == 0) {
@@ -259,6 +270,13 @@ export default {
 .forms {
     display: flex;
     margin: 10px 0 30px;
+
+    .textarea {
+        width: 600px;
+        border: 1px solid #d8d8d8;
+        border-radius: 4px;
+        padding: 10px;
+    }
 
     .form {
         padding: 10px;
