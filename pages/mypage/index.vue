@@ -1,10 +1,6 @@
 <template>
     <div>
         <div class="forms">
-            <textarea type="text" v-model="newTweet" class="textarea" placeholder="ほげほげほげ" />
-            <p class="sendButton" @click="saveTweet(newTweet)">つぶやく</p>
-        </div>
-        <div class="forms">
             <input type="text" v-model="newNickname" class="form" placeholder="ほげほげほげ" />
             <p class="sendButton" @click="saveNickname(newNickname)">ニックネームを更新する</p>
         </div>
@@ -15,6 +11,7 @@
                     <img :src="userdata.photo" class="users-photo-image">
                     <figcaption >
                         <p class="users-photo-name">{{ userName }}</p>
+                        <p class="users-photo-email">{{ userdata.email }}</p>
                         <p class="users-photo-caption">最近あったことをつらつらと書き連ねるスペースです。今日も1日頑張るぞい</p>
                     </figcaption>
                 </figure>
@@ -53,7 +50,6 @@ export default {
     data () {
         return {
             newNickname: '',
-            newTweet: '',
         }
     },
     computed: {
@@ -117,18 +113,6 @@ export default {
                 date: `${year}/${month}/${day}(${yobi[week]})  ${hour}:${minute}:${second}`,
             }
         },
-
-        saveTweet (newTweet) {
-            console.log(this.userdata.tweetId)
-            if(newTweet.length == 0) return;
-            const date = this.getDate()
-            const payload = {
-                tweet: newTweet,
-                date: date.date,
-            }
-            this.$store.dispatch('users/saveTweet', payload);
-            this.newTweet = '';
-        },
         saveNickname (newNickname) {
             if(newNickname.length == 0) {
                 return;
@@ -138,7 +122,7 @@ export default {
             }
             this.$store.dispatch('users/saveNickname', payload);
             this.newNickname = '';
-        }
+        },
     },
 }
 </script>

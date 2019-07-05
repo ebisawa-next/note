@@ -10,15 +10,18 @@
       </li>
     </ul> -->
     <LoginStatus />
+    <Tweet />
+    <TweetModal />
   </header>
 </template>
-x
 <script>
 import Logo from '@/components/atoms/icons/common/logo'
 import LoginStatus from '@/components/molecules/common/loginStatus'
+import Tweet from '@/components/molecules/forms/tweet'
+import TweetModal from '@/components/organisms/modals/tweetModal'
 export default {
   components: {
-    Logo, LoginStatus
+    Logo, LoginStatus, Tweet, TweetModal
   },
   data () {
     return {

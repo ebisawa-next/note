@@ -3,7 +3,7 @@
         <p class="signin-photo-wrap" @click="changeInfos">
             <img class="signin-photo" :src="userdata.photo">
         </p>
-        <ul class="signin-infos" v-if="isInfosShow">
+        <ul class="signin-infos" v-if="isInfosShow" @click="onLinkClicked">
             <li class="signin-infos-info">
                 <p class="signin-infos-username"
                     v-text="userdata.nickname ? userdata.nickname : userdata.name"></p>
@@ -80,6 +80,10 @@ export default {
             this.$store.dispatch('users/googleSignOut');
         },
         changeInfos () {
+            this.isInfosShow = !this.isInfosShow;
+        },
+        onLinkClicked () {
+            console.log('clicklink')
             this.isInfosShow = !this.isInfosShow;
         }
     }
