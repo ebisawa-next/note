@@ -4,7 +4,10 @@
             <textarea type="text" v-model="newTweet" class="textarea" placeholder="ほげほげほげ" />
             <p class="sendButton" @click="saveTweet(newTweet)">つぶやく</p>
         </div>
-
+        <div class="forms">
+            <input type="text" v-model="newNickname" class="form" placeholder="ほげほげほげ" />
+            <p class="sendButton" @click="saveNickname(newNickname)">ニックネームを更新する</p>
+        </div>
         <section class="user-header"></section>
         <section class="container" v-if="isSignedIn">
             <aside class="users">
@@ -36,30 +39,6 @@
                 </ul>
             </article>
         </section>
-
-            <div class="forms">
-                <input type="text" v-model="newNickname" class="form" placeholder="ほげほげほげ" />
-                <p class="sendButton" @click="saveNickname(newNickname)">ニックネームを更新する</p>
-            </div>
-
-            <table class="information">
-                <tr>
-                    <th>ニックネーム</th>
-                    <td>{{ userdata.nickname }}</td>
-                </tr>
-                <tr>
-                    <th>なまえ</th>
-                    <td>{{ userdata.name }}</td>
-                </tr>
-                <tr>
-                    <th>email</th>
-                    <td>{{ userdata.email}}</td>
-                </tr>
-                <tr>
-                    <th>photo</th>
-                    <td><img :src="userdata.photo"></td>
-                </tr>
-            </table>
     </div>
 </template>
 
@@ -86,13 +65,16 @@ export default {
         userName: function () {
             if(!this.userdata) return '';
             return this.userdata.nickname ? this.userdata.nickname : this.userdata.name;
+        },
+        hasTweet: function () {
+            if(this.userdata.tweet !== []) {
+                return false;
+            }
+            return true;
         }
-        // userTweet: function () {
-        //     if(!this.userdata.tweet) return;
-        //     return this.userdata.tweet.reverse();
-        // },
     },
     mounted () {
+        console.log(this.userdata)
     },
     created () {
     },
@@ -104,6 +86,11 @@ export default {
             this.$store.dispatch('users/googleSignOut');
         },
         getDate () {
+            function initNum(num) {
+                if(num >= 10) return num;
+                return `0${num}`
+            }
+
             const hiduke = new Date();
             //年・月・日・曜日を取得する
             var year = hiduke.getFullYear();
@@ -116,21 +103,28 @@ export default {
             var minute = hiduke.getMinutes();
             var second = hiduke.getSeconds();
 
+            month = initNum(month)
+            day = initNum(day)
+
+            hour = initNum(hour)
+            minute = initNum(minute)
+            second = initNum(second)
+
+
             const sort = `${year}${month}${day}${hour}${minute}${second}`
 
             return {
                 date: `${year}/${month}/${day}(${yobi[week]})  ${hour}:${minute}:${second}`,
-                sort: Number(sort)
             }
         },
 
         saveTweet (newTweet) {
+            console.log(this.userdata.tweetId)
             if(newTweet.length == 0) return;
             const date = this.getDate()
             const payload = {
                 tweet: newTweet,
                 date: date.date,
-                sort: date.sort
             }
             this.$store.dispatch('users/saveTweet', payload);
             this.newTweet = '';

@@ -12,7 +12,8 @@ export const state = () => ({
     isSignedIn: false,
     noAccount: false,
     userTweet: [],
-    init: false
+    init: false,
+    userTweetId: 0,
 })
 export const mutations = {
     ...vuexfireMutations,
@@ -21,7 +22,6 @@ export const mutations = {
         state.userName = payload.userName
         state.userPhoto = payload.userPhoto
         state.isSignedIn = true
-        state.imit = true
     },
     deleteUser (state) {
         state.userEmail = null
@@ -32,18 +32,22 @@ export const mutations = {
         state.noAccount = true
         state.userTweet = null
         state.init = false
+        state.userTweetId = 0
     },
     saveNickname (state, payload) {
         state.userNickname = payload.nickname;
     },
     saveTweet (state, payload) {
         state.userTweet.unshift(payload);
+        state.userTweetId++
     },
     rebornTweet (state, payload) {
         for (let i = 0, iz = payload.length; i < iz; i++) {
             state.userTweet.unshift(payload[i]);
         }
+        state.userTweetId = payload.length;
         state.init = true;
+        console.log('reborn:' + state.userTweet)
     }
 }
 export const actions = {
@@ -83,12 +87,10 @@ export const actions = {
         }).catch((error) => {
             console.error("Error getting document:", error)
         })
-
-        console.log(state.userTweet);
-
+        console.log(state.init)
         if(!state.init) {
             const tweetDB = db.collection('users').doc(state.userEmail).collection('tweet');
-            tweetDB.get().then((query) => {
+            tweetDB.orderBy('id').get().then((query) => {
                 const records = query.docs.map(elem => elem.data());
                 commit('rebornTweet', records)
                 console.log(records)
@@ -120,8 +122,9 @@ export const actions = {
         })
     },
     saveTweet ({ state, commit }, payload) {
+        payload.id = state.userTweetId
         db.collection('users').doc(state.userEmail).collection('tweet').add(payload).then(() => {
-            console.log('db saved')
+            console.log('save tweet')
             commit('saveTweet', payload);
         }).catch((error) => {
             console.error("Error writing document: ", error);
@@ -138,7 +141,8 @@ export const getters = {
             name: state.userName,
             photo: state.userPhoto,
             nickname: state.userNickname,
-            tweet: state.userTweet
+            tweet: state.userTweet,
+            tweetId: state.userTweetId
         }
         return data;
     }
