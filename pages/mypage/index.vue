@@ -1,6 +1,5 @@
 <template>
     <div>
-        <Header />
         <div class="forms">
             <textarea type="text" v-model="newTweet" class="textarea" placeholder="ほげほげほげ" />
             <p class="sendButton" @click="saveTweet(newTweet)">つぶやく</p>
@@ -61,7 +60,6 @@
                     <td><img :src="userdata.photo"></td>
                 </tr>
             </table>
-        <Footer />
     </div>
 </template>
 
@@ -70,13 +68,8 @@ import { mapGetters } from 'vuex'
 import { db, auth } from '@/plugins/firebase'
 import firebase from 'firebase'
 
-// components
-import Header from '@/components/organisms/common/header'
-import Footer from '@/components/organisms/common/footer'
-
 export default {
     components: {
-        Header, Footer
     },
     data () {
         return {
@@ -100,7 +93,6 @@ export default {
         // },
     },
     mounted () {
-        // this.$store.dispatch('users/googleAuthStateChanged');
     },
     created () {
     },

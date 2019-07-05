@@ -1,8 +1,21 @@
 <template>
   <div>
+    <Header />
     <nuxt/>
+    <Footer />
   </div>
 </template>
+
+<script>
+import Header from "@/components/organisms/common/header"
+import Footer from "@/components/organisms/common/footer"
+
+export default {
+  components: {
+    Header, Footer
+  }
+};
+</script>
 
 <style lang="scss">
 html {

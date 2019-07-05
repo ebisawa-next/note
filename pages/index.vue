@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Header />
     <Hero />
     <section class="container">  
       <div v-if="isSignedIn">
@@ -22,7 +21,6 @@
           </li>
         </ul>
     </section>
-    <Footer />
   </div>
 </template>
 
@@ -30,8 +28,7 @@
 import { mapGetters } from 'vuex'
 import { db, auth } from '../plugins/firebase'
 
-import Header from '@/components/organisms/common/header'
-import Footer from '@/components/organisms/common/footer'
+// components
 import Hero from '@/components/molecules/blocks/Hero'
 export default {
   data () {
@@ -40,7 +37,7 @@ export default {
     }
   },
   components: {
-    Header, Hero, Footer
+    Hero
   },
   computed: {
     ...mapGetters({
@@ -51,7 +48,6 @@ export default {
   },
   mounted () {
     this.$store.dispatch('setNotesRef', db.collection('notes'))
-    this.$store.dispatch('users/googleAuthStateChanged');
   },
   methods: {
     saveNote () {
