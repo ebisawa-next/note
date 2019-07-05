@@ -12,6 +12,7 @@ export const state = () => ({
     isSignedIn: false,
     noAccount: false,
     userTweet: [],
+    init: false
 })
 export const mutations = {
     ...vuexfireMutations,
@@ -20,6 +21,7 @@ export const mutations = {
         state.userName = payload.userName
         state.userPhoto = payload.userPhoto
         state.isSignedIn = true
+        state.imit = true
     },
     deleteUser (state) {
         state.userEmail = null
@@ -29,12 +31,19 @@ export const mutations = {
         state.isSignedIn = false
         state.noAccount = true
         state.userTweet = null
+        state.init = false
     },
     saveNickname (state, payload) {
         state.userNickname = payload.nickname;
     },
     saveTweet (state, payload) {
-        state.userTweet.push(payload.tweet);
+        state.userTweet.unshift(payload);
+    },
+    rebornTweet (state, payload) {
+        for (let i = 0, iz = payload.length; i < iz; i++) {
+            state.userTweet.unshift(payload[i]);
+        }
+        state.init = true;
     }
 }
 export const actions = {
@@ -74,21 +83,19 @@ export const actions = {
         }).catch((error) => {
             console.error("Error getting document:", error)
         })
-                const tweet = {
-                  tweet: '寿司'
-                };
-                commit('saveTweet', tweet);
 
-        const tweetDB = db.collection('users').doc(state.userEmail).collection('tweet');
-        tweetDB.get().then((doc) => {
-            console.log(doc);
-            if(doc.exists) {
-                console.log(doc.data())
+        console.log(state.userTweet);
 
-            }
-        }).catch((error) => {
-            console.error("Error getting document:", error)
-        });
+        if(!state.init) {
+            const tweetDB = db.collection('users').doc(state.userEmail).collection('tweet');
+            tweetDB.get().then((query) => {
+                const records = query.docs.map(elem => elem.data());
+                commit('rebornTweet', records)
+                console.log(records)
+            }).catch((error) => {
+                console.error("Error getting document:", error)
+            });
+        }
     },
     createUser ({ state, commit }) {
         const data = {
@@ -113,12 +120,9 @@ export const actions = {
         })
     },
     saveTweet ({ state, commit }, payload) {
-        const tweet = {
-            tweet: payload.tweet
-        }
-        db.collection('users').doc(state.userEmail).collection('tweet').add({ tweet }).then(() => {
+        db.collection('users').doc(state.userEmail).collection('tweet').add(payload).then(() => {
             console.log('db saved')
-            commit('saveTweet', tweet);
+            commit('saveTweet', payload);
         }).catch((error) => {
             console.error("Error writing document: ", error);
         })

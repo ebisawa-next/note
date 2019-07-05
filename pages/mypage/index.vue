@@ -18,59 +18,13 @@
                 </figure>
             </aside>
             <article class="timelines">
-                {{ userdata.tweet }}
                 <ul class="timelines-items">
-                    <li class="timelines-items-item">
+                    <li v-for="(tweet, index) in userdata.tweet" :key="index" class="timelines-items-item">
                         <div class="timelines-tweet-head">
                             <p class="timelines-tweet-head-name">{{ userName }}</p>
-                            <time class="timelines-tweet-head-time">2019/12/01 12:00</time>
+                            <time class="timelines-tweet-head-time">{{ tweet.date }}</time>
                         </div>
-                        <p class="timelines-tweet-text">ほげほげほげ</p>
-                        <ul class="timelines-actions">
-                            <li class="timelines-actions-action">
-                                はーと
-                            </li>
-                            <li class="timelines-actions-action">
-                                こめんと
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="timelines-items-item">
-                        <div class="timelines-tweet-head">
-                            <p class="timelines-tweet-head-name">{{ userName }}</p>
-                            <time class="timelines-tweet-head-time">2019/12/01 12:00</time>
-                        </div>
-                        <p class="timelines-tweet-text">ほげほげほげ</p>
-                        <ul class="timelines-actions">
-                            <li class="timelines-actions-action">
-                                はーと
-                            </li>
-                            <li class="timelines-actions-action">
-                                こめんと
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="timelines-items-item">
-                        <div class="timelines-tweet-head">
-                            <p class="timelines-tweet-head-name">{{ userName }}</p>
-                            <time class="timelines-tweet-head-time">2019/12/01 12:00</time>
-                        </div>
-                        <p class="timelines-tweet-text">ほげほげほげ</p>
-                        <ul class="timelines-actions">
-                            <li class="timelines-actions-action">
-                                はーと
-                            </li>
-                            <li class="timelines-actions-action">
-                                こめんと
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="timelines-items-item">
-                        <div class="timelines-tweet-head">
-                            <p class="timelines-tweet-head-name">{{ userName }}</p>
-                            <time class="timelines-tweet-head-time">2019/12/01 12:00</time>
-                        </div>
-                        <p class="timelines-tweet-text">ほげほげほげ</p>
+                        <p class="timelines-tweet-text">{{ tweet.tweet }}</p>
                         <ul class="timelines-actions">
                             <li class="timelines-actions-action">
                                 はーと
@@ -119,6 +73,7 @@ import firebase from 'firebase'
 // components
 import Header from '@/components/organisms/common/header'
 import Footer from '@/components/organisms/common/footer'
+
 export default {
     components: {
         Header, Footer
@@ -132,15 +87,20 @@ export default {
     computed: {
         ...mapGetters({
             isSignedIn: 'users/getSignStatus',
-            userdata: 'users/getUserdata'
+            userdata: 'users/getUserdata',
+            timeline: 'users/getTimeline'
         }),
         userName: function () {
             if(!this.userdata) return '';
             return this.userdata.nickname ? this.userdata.nickname : this.userdata.name;
         }
+        // userTweet: function () {
+        //     if(!this.userdata.tweet) return;
+        //     return this.userdata.tweet.reverse();
+        // },
     },
     mounted () {
-        this.$store.dispatch('users/googleAuthStateChanged');
+        // this.$store.dispatch('users/googleAuthStateChanged');
     },
     created () {
     },
@@ -151,11 +111,34 @@ export default {
         googleSignOut () {
             this.$store.dispatch('users/googleSignOut');
         },
+        getDate () {
+            const hiduke = new Date();
+            //年・月・日・曜日を取得する
+            var year = hiduke.getFullYear();
+            var month = hiduke.getMonth()+1;
+            var week = hiduke.getDay();
+            var day = hiduke.getDate();
+            var yobi= new Array("日","月","火","水","木","金","土");
+
+            var hour = hiduke.getHours();
+            var minute = hiduke.getMinutes();
+            var second = hiduke.getSeconds();
+
+            const sort = `${year}${month}${day}${hour}${minute}${second}`
+
+            return {
+                date: `${year}/${month}/${day}(${yobi[week]})  ${hour}:${minute}:${second}`,
+                sort: Number(sort)
+            }
+        },
 
         saveTweet (newTweet) {
             if(newTweet.length == 0) return;
+            const date = this.getDate()
             const payload = {
                 tweet: newTweet,
+                date: date.date,
+                sort: date.sort
             }
             this.$store.dispatch('users/saveTweet', payload);
             this.newTweet = '';

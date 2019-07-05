@@ -15,7 +15,7 @@
             </li>
             <li class="signin-infos-info is-link">
                 <nuxt-link to="/mypage" class="signin-infos-link">
-                    <span class="signin-infos-link-icon"><Function size="14" color="sushi" /></span>
+                    <span class="signin-infos-link-icon"><Function :size="14" color="sushi" /></span>
                     <span>設定変更</span>
                 </nuxt-link>
             </li>
