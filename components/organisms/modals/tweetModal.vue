@@ -7,7 +7,7 @@
 <script>
 // Store使う場合はmapgettersで呼び出し
 // DB使う場合はfirebase
-// import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 // import { db, auth } from '@/plugins/firebase'
 
 import Modal from '@/components/molecules/modals/modal'

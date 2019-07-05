@@ -9,8 +9,12 @@
         <a :href="link.url" class="header-links-text">{{ link.text }}</a>
       </li>
     </ul> -->
-    <LoginStatus />
-    <Tweet />
+    <div class="header-functions">
+      <p class="header-functions-button" @click="openModal">つぶやく</p>
+      <p class="header-functions-icon">
+        <LoginStatus />
+      </p>
+    </div>
     <TweetModal />
   </header>
 </template>
@@ -46,6 +50,10 @@ export default {
   mounted () {
   },
   methods: {
+    openModal () {
+      console.log('open')
+        this.$store.dispatch('tweet/openTweetModal');
+    }
   }
 }
 </script>
@@ -84,6 +92,25 @@ export default {
     &:hover {
       text-decoration: underline;
     }
+  }
+}
+.header-functions {
+  display: flex;
+  $oshushi: map-get($color-service, accent);
+  &-button {
+    padding: 10px 30px;
+    border-radius: 4px;
+    background-color: $oshushi;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    font-size: 1.4rem;
+    @include hover-transition(.3s) {
+      background-color: lighten($oshushi, 10%);
+    }
+  }
+  &-icon {
+    margin-left: 20px;
   }
 }
 </style>

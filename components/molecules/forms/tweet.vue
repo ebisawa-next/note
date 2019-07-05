@@ -72,6 +72,7 @@ export default {
             }
             this.$store.dispatch('users/saveTweet', payload);
             this.newTweet = '';
+            this.$store.dispatch('tweet/closeTweetModal');
         },
     }
 }
@@ -89,12 +90,16 @@ export default {
         padding: 10px;
     }
     .sendButton {
-        background-color: #ed6103;
+        $oshushi: map-get($color-service, accent);
+        background-color: $oshushi;
         color: #fff;
         padding: 10px;
         border-radius: 4px;
         margin-top: 10px;
         text-align: center;
+        @include hover-transition {
+            background-color: lighten($oshushi, 10%);
+        }
     }
     @include mq {
         flex-direction: row;

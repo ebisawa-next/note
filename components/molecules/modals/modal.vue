@@ -1,5 +1,5 @@
 <template>
-    <div class="modal" v-if="isShowModal">
+    <div class="modal" v-if="isTweetModalShow">
         <div class="modal-bg" @click="closeModal">
         </div>
         <div class="modal-container">
@@ -13,7 +13,7 @@
 <script>
 // Store使う場合はmapgettersで呼び出し
 // DB使う場合はfirebase
-// import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 // import { db, auth } from '@/plugins/firebase'
 export default {
     components: {
@@ -21,18 +21,20 @@ export default {
     },
     data () {
         return {
-            isShowModal: true
         }
     },
     props: {
     },
     computed: {
+        ...mapGetters({
+            isTweetModalShow: 'tweet/getIsTweetModalShow'
+        }),
     },
     mounted () {
     },
     methods: {
         closeModal () {
-            this.isShowModal = false
+            this.$store.dispatch('tweet/closeTweetModal');
         }
     }
 }
