@@ -8,7 +8,7 @@
                     <p class="users-photo-name">{{ userName }}</p>
                     <p class="users-photo-email">{{ userdata.email }}</p>
                 </figure>
-                <p class="users-photo-caption">最近あったことをつらつらと書き連ねるスペースです。今日も1日頑張るぞい</p>
+                <p class="users-photo-caption">{{ userdata.profile }}</p>
             </aside>
             <article class="timelines">
                 <ul class="timelines-items">

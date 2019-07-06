@@ -9,6 +9,7 @@ export const state = () => ({
     userName: null,
     userPhoto: null,
     userNickname: null,
+    userProfile: null,
     isSignedIn: false,
     noAccount: false,
     userTweet: [],
@@ -33,9 +34,11 @@ export const mutations = {
         state.userTweet = null
         state.init = false
         state.userTweetId = 0
+        state.userProfile = null
     },
-    saveNickname (state, payload) {
+    saveUserdata (state, payload) {
         state.userNickname = payload.nickname;
+        state.userProfile = payload.profile;
     },
     saveTweet (state, payload) {
         state.userTweet.unshift(payload);
@@ -79,7 +82,7 @@ export const actions = {
         db.collection('users').doc(state.userEmail).get().then((doc) => {
             if (doc.exists) {
                 console.log("Document data:", doc.data())
-                commit('saveNickname', doc.data().data)
+                commit('saveUserdata', doc.data().data)
             } else {
                 console.log("No such document!")
                 dispatch('createUser')
@@ -110,13 +113,15 @@ export const actions = {
             console.error("Error writing document: ", error);
         });
     },
-    saveNickname ({ state, commit }, payload) {
-        const data = {
-            nickname: payload.nickname
-        }
-        db.collection('users').doc(state.userEmail).set({ data }).then(() => {
+    /**
+     * ユーザーデータを登録する
+     * @param {Object} param0 
+     * @param {Object} payload nickname, profile
+     */
+    saveUserdata ({ state, commit }, payload) {
+        db.collection('users').doc(state.userEmail).set({ payload }).then(() => {
             console.log('db saved')
-            commit('saveNickname', data);
+            commit('saveUserdata', payload);
         }).catch((error) => {
             console.error("Error writing document: ", error);
         })
@@ -139,10 +144,11 @@ export const getters = {
         const data = {
             email: state.userEmail,
             name: state.userName,
+            profile: state.userProfile,
             photo: state.userPhoto,
             nickname: state.userNickname,
             tweet: state.userTweet,
-            tweetId: state.userTweetId
+            tweetId: state.userTweetId,
         }
         return data;
     }

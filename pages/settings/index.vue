@@ -5,6 +5,7 @@
             <li class="settings-forms-form">
                 <p class="form-label">ニックネーム</p>
                 <input class="form-input" type="text" v-model="newNickname" :placeholder="userdata.nickname" />
+                <p v-if="errorNickname" class="form-error">ニックネームを入力してください</p>
             </li>
             <li class="settings-forms-form">
                 <p class="form-label">自己紹介</p>
@@ -12,7 +13,7 @@
             </li>
         </ul>
         <!-- <p class="settings-button" @click="saveUserdata(newNickname, newProfile)">更新する</p> -->
-        <p class="settings-button" @click="saveNickname(newNickname)">更新する</p>
+        <p class="settings-button" @click="saveUserdata(newNickname, newProfile)">更新する</p>
     </section>
 </template>
 
@@ -27,6 +28,8 @@ export default {
     data () {
         return {
             newNickname: '',
+            newProfile: '',
+            errorNickname: false
         }
     },
     computed: {
@@ -44,15 +47,17 @@ export default {
     created () {
     },
     methods: {
-        saveNickname (newNickname) {
-            if(newNickname.length == 0) {
-                return;
+        saveUserdata (newNickname, newProfile) {
+            if(newNickname.length == 0 || newProfile.length == 0) {
+                return this.errorNickname = true;
             }
             const payload = {
-                nickname: newNickname
+                nickname: newNickname,
+                profile: newProfile
             }
-            this.$store.dispatch('users/saveNickname', payload);
-            this.newNickname = '';
+            this.$store.dispatch('users/saveUserdata', payload);
+            this.newNickname = payload.nickname;
+            this.newProfile = payload.profile;
         },
     },
 }

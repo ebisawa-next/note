@@ -30,7 +30,6 @@ export default {
     computed: {
     },
     mounted () {
-        console.log(show);
     },
     methods: {
     }

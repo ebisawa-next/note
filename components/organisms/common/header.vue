@@ -61,8 +61,7 @@ export default {
   },
   methods: {
     openModal () {
-      console.log('open')
-        this.$store.dispatch('tweet/openTweetModal');
+      this.$store.dispatch('tweet/openTweetModal');
     }
   }
 }
