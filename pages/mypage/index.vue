@@ -1,20 +1,18 @@
 <template>
     <div>
-        <div class="forms">
-            <input type="text" v-model="newNickname" class="form" placeholder="ほげほげほげ" />
-            <p class="sendButton" @click="saveNickname(newNickname)">ニックネームを更新する</p>
-        </div>
         <section class="user-header"></section>
         <section class="container" v-if="isSignedIn">
             <aside class="users">
                 <figure class="users-photo">
                     <img :src="userdata.photo" class="users-photo-image">
-                    <figcaption >
-                        <p class="users-photo-name">{{ userName }}</p>
-                        <p class="users-photo-email">{{ userdata.email }}</p>
-                        <p class="users-photo-caption">最近あったことをつらつらと書き連ねるスペースです。今日も1日頑張るぞい</p>
-                    </figcaption>
+                    <p class="users-photo-name">{{ userName }}</p>
+                    <p class="users-photo-email">{{ userdata.email }}</p>
                 </figure>
+                <p class="users-photo-caption">最近あったことをつらつらと書き連ねるスペースです。今日も1日頑張るぞい</p>
+                <div class="forms">
+                    <input type="text" v-model="newNickname" class="form" placeholder="ほげほげほげ" />
+                    <p class="sendButton" @click="saveNickname(newNickname)">ニックネームを更新する</p>
+                </div>
             </aside>
             <article class="timelines">
                 <ul class="timelines-items">
@@ -56,7 +54,7 @@ export default {
         ...mapGetters({
             isSignedIn: 'users/getSignStatus',
             userdata: 'users/getUserdata',
-            timeline: 'users/getTimeline'
+            timeline: 'users/getTimeline',
         }),
         userName: function () {
             if(!this.userdata) return '';
@@ -139,12 +137,15 @@ export default {
 }
 .user-header {
     display: block;
-    height: 300px;
+    height: 150px;
     background:
-        color-gradient(.9),
+        color-gradient(.8),
         url(~assets/images/index/sushi.jpg);
     background-size: cover;
     background-attachment: fixed;
+    @include mq {
+        height: 300px;
+    }
 }
 .timelines {
     position: relative;
@@ -185,26 +186,31 @@ export default {
     }
 }
 .users {
-    width: 250px;
     box-sizing: border-box;
     padding: 0 10px;
     background-color: #f5f5f5;
     position: relative;
+    @include mq(tbAndSp) {
+        width: 100%;
+    }
+    @include mq {
+        width: 250px;
+    }
     &-photo {
-        position: absolute;
-        top: -90px;
-        left: calc(50% - 90px);
-        width: 180px;
-        height: 180px;
+        margin-top: -50px;
         &-image {
             border-radius: 50%;
-            border: 4px solid #fff;
-            width: 100%;
-            height: 100%;
+            border: 6px solid #fff;
+            width: 100px;
+            height: 100px;
             box-shadow: 0 1px 2px rgba(0, 0, 0, .3);
+            @include mq {
+                width: 50%;
+                height: auto;
+            }
         }
         &-name {
-            font-size: 2rem;
+            font-size: 2.4rem;
             font-weight: bold;
         }
         &-caption {
@@ -222,15 +228,8 @@ export default {
 
 .forms {
     display: flex;
-    margin: 10px 0 30px;
-
-    .textarea {
-        width: 600px;
-        border: 1px solid #d8d8d8;
-        border-radius: 4px;
-        padding: 10px;
-    }
-
+    flex-direction: column;
+    margin-top: 10px;
     .form {
         padding: 10px;
         border-radius: 4px;
@@ -242,7 +241,8 @@ export default {
         color: #fff;
         padding: 10px;
         border-radius: 4px;
-        margin-left: 10px;
+        margin-top: 10px;
+        text-align: center;
     }
 }
 

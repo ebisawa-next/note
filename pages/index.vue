@@ -1,7 +1,8 @@
 <template>
   <div>
     <Hero />
-    <section class="container">  
+    <p class="login" @click="googleSignIn">ログイン</p>
+    <section class="container" style="display: none">  
       <div v-if="isSignedIn">
           <p>ようこそ{{ userdata.name }}</p>
           <nuxt-link to="/mypage">マイページに行こう</nuxt-link>

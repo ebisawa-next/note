@@ -1,4 +1,5 @@
 <template>
+  <div>
   <header class="header">
     <nuxt-link to="/" class="header-logo-link">
       <Logo />
@@ -17,15 +18,21 @@
     </div>
     <TweetModal />
   </header>
+  <Success :show="isTweetSuccess">ツイートが投稿されました</Success>
+
+  </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
+
 import Logo from '@/components/atoms/icons/common/logo'
 import LoginStatus from '@/components/molecules/common/loginStatus'
 import Tweet from '@/components/molecules/forms/tweet'
 import TweetModal from '@/components/organisms/modals/tweetModal'
+import Success from '@/components/organisms/nofitications/success'
 export default {
   components: {
-    Logo, LoginStatus, Tweet, TweetModal
+    Logo, LoginStatus, Tweet, TweetModal, Success
   },
   data () {
     return {
@@ -46,6 +53,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+        isTweetSuccess: 'tweet/getIsTweetSuccess'
+    })
   },
   mounted () {
   },

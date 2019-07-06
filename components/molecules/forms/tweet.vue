@@ -70,9 +70,10 @@ export default {
                 tweet: newTweet,
                 date: date.date,
             }
-            this.$store.dispatch('users/saveTweet', payload);
-            this.newTweet = '';
             this.$store.dispatch('tweet/closeTweetModal');
+            this.$store.dispatch('users/saveTweet', payload);
+            this.$store.dispatch('tweet/successTweet');
+            this.newTweet = '';
         },
     }
 }
@@ -81,22 +82,26 @@ export default {
 <style lang="scss" scoped>
 .forms {
     display: flex;
+    align-items: flex-end;
     flex-direction: column;
     .textarea {
         width: 100%;
-        height: 100px;
+        height: 80px;
         border: 1px solid #d8d8d8;
         border-radius: 4px;
         padding: 10px;
+        flex: 3;
     }
     .sendButton {
         $oshushi: map-get($color-service, accent);
         background-color: $oshushi;
         color: #fff;
         padding: 10px;
-        border-radius: 4px;
+        border-radius: 20px;
         margin-top: 10px;
         text-align: center;
+        flex: 1;
+        font-size: 1.4rem;
         @include hover-transition {
             background-color: lighten($oshushi, 10%);
         }
