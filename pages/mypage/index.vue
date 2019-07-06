@@ -9,10 +9,6 @@
                     <p class="users-photo-email">{{ userdata.email }}</p>
                 </figure>
                 <p class="users-photo-caption">最近あったことをつらつらと書き連ねるスペースです。今日も1日頑張るぞい</p>
-                <div class="forms">
-                    <input type="text" v-model="newNickname" class="form" placeholder="ほげほげほげ" />
-                    <p class="sendButton" @click="saveNickname(newNickname)">ニックネームを更新する</p>
-                </div>
             </aside>
             <article class="timelines">
                 <ul class="timelines-items">
@@ -68,59 +64,10 @@ export default {
         }
     },
     mounted () {
-        console.log(this.userdata)
     },
     created () {
     },
     methods: {
-        googleSignIn () {
-            this.$store.dispatch('users/googleSignIn');
-        },
-        googleSignOut () {
-            this.$store.dispatch('users/googleSignOut');
-        },
-        getDate () {
-            function initNum(num) {
-                if(num >= 10) return num;
-                return `0${num}`
-            }
-
-            const hiduke = new Date();
-            //年・月・日・曜日を取得する
-            var year = hiduke.getFullYear();
-            var month = hiduke.getMonth()+1;
-            var week = hiduke.getDay();
-            var day = hiduke.getDate();
-            var yobi= new Array("日","月","火","水","木","金","土");
-
-            var hour = hiduke.getHours();
-            var minute = hiduke.getMinutes();
-            var second = hiduke.getSeconds();
-
-            month = initNum(month)
-            day = initNum(day)
-
-            hour = initNum(hour)
-            minute = initNum(minute)
-            second = initNum(second)
-
-
-            const sort = `${year}${month}${day}${hour}${minute}${second}`
-
-            return {
-                date: `${year}/${month}/${day}(${yobi[week]})  ${hour}:${minute}:${second}`,
-            }
-        },
-        saveNickname (newNickname) {
-            if(newNickname.length == 0) {
-                return;
-            }
-            const payload = {
-                nickname: newNickname
-            }
-            this.$store.dispatch('users/saveNickname', payload);
-            this.newNickname = '';
-        },
     },
 }
 </script>
@@ -187,7 +134,7 @@ export default {
 }
 .users {
     box-sizing: border-box;
-    padding: 0 10px;
+    padding: 0 10px 20px;
     background-color: #f5f5f5;
     position: relative;
     @include mq(tbAndSp) {
@@ -212,6 +159,7 @@ export default {
         &-name {
             font-size: 2.4rem;
             font-weight: bold;
+            margin-top: 10px;
         }
         &-caption {
             font-size: 1.4rem;
@@ -223,27 +171,6 @@ export default {
 
 .heading {
     font-size: 2.4rem;
-}
-
-
-.forms {
-    display: flex;
-    flex-direction: column;
-    margin-top: 10px;
-    .form {
-        padding: 10px;
-        border-radius: 4px;
-        border: 1px solid #d8d8d8;
-    }
-
-    .sendButton {
-        background-color: #ed6103;
-        color: #fff;
-        padding: 10px;
-        border-radius: 4px;
-        margin-top: 10px;
-        text-align: center;
-    }
 }
 
 .login {
@@ -267,4 +194,3 @@ export default {
     background-color: #f5f5f5;
 }
 </style>
-
