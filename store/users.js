@@ -15,6 +15,7 @@ export const state = () => ({
     userTweet: [],
     init: false,
     userTweetId: 0,
+    userId: null
 })
 export const mutations = {
     ...vuexfireMutations,
@@ -35,10 +36,13 @@ export const mutations = {
         state.init = false
         state.userTweetId = 0
         state.userProfile = null
+        state.userId = null
     },
     saveUserdata (state, payload) {
+        console.log(payload);
         state.userNickname = payload.nickname;
         state.userProfile = payload.profile;
+        state.userId = payload.uid;
     },
     saveTweet (state, payload) {
         state.userTweet.unshift(payload);
@@ -81,7 +85,7 @@ export const actions = {
     userCheck ({ dispatch, commit, state }) {
         db.collection('users').doc(state.userEmail).get().then((doc) => {
             if (doc.exists) {
-                console.log("Document data:", doc.data())
+                console.log("userCheck", doc.data())
                 commit('saveUserdata', doc.data().data)
             } else {
                 console.log("No such document!")
@@ -119,9 +123,10 @@ export const actions = {
      * @param {Object} payload nickname, profile
      */
     saveUserdata ({ state, commit }, payload) {
-        db.collection('users').doc(state.userEmail).set({ payload }).then(() => {
+        const data = payload
+        db.collection('users').doc(state.userEmail).set({ data }).then(() => {
             console.log('db saved')
-            commit('saveUserdata', payload);
+            commit('saveUserdata', data);
         }).catch((error) => {
             console.error("Error writing document: ", error);
         })
@@ -149,6 +154,7 @@ export const getters = {
             nickname: state.userNickname,
             tweet: state.userTweet,
             tweetId: state.userTweetId,
+            userId: state.uid
         }
         return data;
     }

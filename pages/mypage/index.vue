@@ -7,6 +7,7 @@
                     <img :src="userdata.photo" class="users-photo-image">
                     <p class="users-photo-name">{{ userName }}</p>
                     <p class="users-photo-email">{{ userdata.email }}</p>
+                    <p>{{ userdata.uid }}</p>
                 </figure>
                 <p class="users-photo-caption">{{ userdata.profile }}</p>
             </aside>

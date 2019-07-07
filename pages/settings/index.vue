@@ -3,6 +3,11 @@
         <h2 class="settings-heading">Settings</h2>
         <ul class="settings-forms">
             <li class="settings-forms-form">
+                <p class="form-label">ユーザーID</p>
+                <input class="form-input" type="text" v-model="newUid" :placeholder="userdata.uid" />
+                <p v-if="errorUid" class="form-error">ユーザーIDを入力してください</p>
+            </li>
+            <li class="settings-forms-form">
                 <p class="form-label">ニックネーム</p>
                 <input class="form-input" type="text" v-model="newNickname" :placeholder="userdata.nickname" />
                 <p v-if="errorNickname" class="form-error">ニックネームを入力してください</p>
@@ -12,8 +17,7 @@
                 <textarea class="form-input" type="text" v-model="newProfile" style="height: 80px" :placeholder="userdata.profile" />
             </li>
         </ul>
-        <!-- <p class="settings-button" @click="saveUserdata(newNickname, newProfile)">更新する</p> -->
-        <p class="settings-button" @click="saveUserdata(newNickname, newProfile)">更新する</p>
+        <p class="settings-button" @click="saveUserdata(newNickname, newProfile, newUid)">更新する</p>
     </section>
 </template>
 
@@ -29,7 +33,9 @@ export default {
         return {
             newNickname: '',
             newProfile: '',
-            errorNickname: false
+            newUid: '',
+            errorNickname: false,
+            errorUid: false
         }
     },
     computed: {
@@ -47,17 +53,19 @@ export default {
     created () {
     },
     methods: {
-        saveUserdata (newNickname, newProfile) {
+        saveUserdata (newNickname, newProfile, newUid) {
             if(newNickname.length == 0 || newProfile.length == 0) {
                 return this.errorNickname = true;
             }
             const payload = {
                 nickname: newNickname,
-                profile: newProfile
+                profile: newProfile,
+                uid: newUid
             }
             this.$store.dispatch('users/saveUserdata', payload);
             this.newNickname = payload.nickname;
             this.newProfile = payload.profile;
+            this.newUid = payload.uid
         },
     },
 }
