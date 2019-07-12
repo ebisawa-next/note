@@ -27,7 +27,7 @@
         </ul>
     </div>
     <div v-else>
-        <Shadow :color="color" @click="googleSignIn">
+        <Shadow :color="color" @fire="googleSignIn">
             <span class="text" :class="caseClass">ログインする</span>
         </Shadow>
     </div>

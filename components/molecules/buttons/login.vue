@@ -3,7 +3,7 @@
         ログインずみだね
     </div>
     <div v-else>
-        <Shadow :color="color">
+        <Shadow :color="color" @fire="googleSignIn">
             <span class="text" :class="caseClass">ログインする</span>
         </Shadow>
     </div>
@@ -47,6 +47,9 @@ export default {
         this.$store.dispatch('users/googleAuthStateChanged');
     },
     methods: {
+        googleSignIn () {
+            this.$store.dispatch('users/googleSignIn');
+        }
     }
 }
 </script>

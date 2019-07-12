@@ -1,5 +1,5 @@
 <template>
-    <button class="button" :class="[buttonColor]" @click="clickEvent">
+    <button class="button" :class="[buttonColor]" @click="fire">
         <slot />
     </button>
 </template>
@@ -28,8 +28,8 @@ export default {
     mounted () {
     },
     methods: {
-        clickEvent: function () {
-            this.click();
+        fire () {
+            this.$emit('fire');
         }
     },
 }
