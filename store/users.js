@@ -15,7 +15,8 @@ export const state = () => ({
     userTweet: [],
     init: false,
     userTweetId: 0,
-    userId: null
+    userId: null,
+    create: false
 })
 export const mutations = {
     ...vuexfireMutations,
@@ -39,10 +40,11 @@ export const mutations = {
         state.userId = null
     },
     saveUserdata (state, payload) {
-        console.log(payload);
+        console.log('mutation saveUserdata' + payload);
         state.userNickname = payload.nickname;
         state.userProfile = payload.profile;
         state.userId = payload.uid;
+        state.create = true;
     },
     saveTweet (state, payload) {
         state.userTweet.unshift(payload);
@@ -55,6 +57,11 @@ export const mutations = {
         state.userTweetId = payload.length;
         state.init = true;
         console.log('reborn:' + state.userTweet)
+    },
+    toCreateUserPage () {
+        if (!state.create) return;
+        location.href = '/mypage'
+        state.create = true;
     }
 }
 export const actions = {
@@ -85,11 +92,13 @@ export const actions = {
     userCheck ({ dispatch, commit, state }) {
         db.collection('users').doc(state.userEmail).get().then((doc) => {
             if (doc.exists) {
-                console.log("userCheck", doc.data())
+                const userData = doc.data().data
                 commit('saveUserdata', doc.data().data)
             } else {
                 console.log("No such document!")
-                dispatch('createUser')
+                commit('toCreateUserPage')
+                // location.href = '/create'
+                // dispatch('createUser')
             }
         }).catch((error) => {
             console.error("Error getting document:", error)
@@ -106,13 +115,11 @@ export const actions = {
             });
         }
     },
-    createUser ({ state, commit }) {
-        const data = {
-            nickname: 'まだないよ'
-        }
+    createUser ({ state, commit }, payload) {
+        const data = payload
         db.collection('users').doc(state.userEmail).set({ data }).then(() => {
-            console.log("Document successfully written!");
-            commit('saveNickname', data)
+            commit('saveUserdata', data)
+            location.href = '/mypage'
         }).catch((error) => {
             console.error("Error writing document: ", error);
         });
@@ -154,7 +161,7 @@ export const getters = {
             nickname: state.userNickname,
             tweet: state.userTweet,
             tweetId: state.userTweetId,
-            userId: state.uid
+            uid: state.userId
         }
         return data;
     }
