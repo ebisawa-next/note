@@ -57,15 +57,15 @@ export default {
             if(newNickname.length == 0 || newProfile.length == 0) {
                 return this.errorNickname = true;
             }
-            const payload = {
+            const data = {
                 nickname: newNickname,
                 profile: newProfile,
                 uid: newUid
             }
-            this.$store.dispatch('users/saveUserdata', payload);
-            this.newNickname = payload.nickname;
-            this.newProfile = payload.profile;
-            this.newUid = payload.uid
+            this.$store.dispatch('users/saveUserdata', data);
+            this.newNickname = data.nickname;
+            this.newProfile = data.profile;
+            this.newUid = data.uid
         },
     },
 }
