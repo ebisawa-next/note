@@ -49,6 +49,7 @@ export const mutations = {
     saveTweet (state, payload) {
         state.userTweet.unshift(payload);
         state.userTweetId++
+        console.log('save usertweet')
     },
     rebornTweet (state, payload) {
         for (let i = 0, iz = payload.length; i < iz; i++) {
@@ -94,6 +95,11 @@ export const actions = {
             if (doc.exists) {
                 const userData = doc.data().data
                 commit('saveUserdata', doc.data().data)
+
+                const tweetData = {
+                    userTweetId: state.userTweetId,
+                    userId: doc.data.userId
+                }
             } else {
                 console.log("No such document!")
                 commit('toCreateUserPage')
@@ -146,6 +152,21 @@ export const actions = {
         }).catch((error) => {
             console.error("Error writing document: ", error);
         })
+    },
+
+    accessedUserpage ({ state, commit }, payload) {
+        // childだけでとれないか修正する
+        db.collection('users').get()
+        .then(function(querySnapshot) {
+            querySnapshot.forEach(function (doc) {
+                console.log(doc.data().data.uid)
+
+            })
+            // console.log(querySnapshot)
+        })
+        .catch((err) => {
+            console.error(err)
+        })
     }
 }
 export const getters = {
@@ -164,5 +185,5 @@ export const getters = {
             uid: state.userId
         }
         return data;
-    }
+    },
 }

@@ -36,20 +36,6 @@ export default {
   },
   data () {
     return {
-      links: [
-        {
-          url: '#',
-          text: 'ほげ'
-        },
-        {
-          url: '#',
-          text: 'ふが'
-        },
-        {
-          url: '#',
-          text: 'ぴよ'
-        },
-      ]
     }
   },
   computed: {

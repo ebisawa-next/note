@@ -63,15 +63,15 @@ export default {
             }
         },
         saveTweet (newTweet) {
-            console.log(this.userdata.tweetId)
             if(newTweet.length == 0) return;
             const date = this.getDate()
             const payload = {
                 tweet: newTweet,
                 date: date.date,
+                favorite: 0
             }
             this.$store.dispatch('tweet/closeTweetModal');
-            this.$store.dispatch('users/saveTweet', payload);
+            this.$store.dispatch('tweet/saveTweet', payload);
             this.$store.dispatch('tweet/successTweet');
             this.newTweet = '';
         },
