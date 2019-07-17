@@ -68,7 +68,7 @@ export default {
             return `is-${this.case}`
         },
         userpage: function () {
-            return `/users/${this.userdata.uid}`
+            return `/users/${this.userdata.id}`
         }
     },
     mounted () {

@@ -8,7 +8,6 @@ export const state = () => ({
     userEmail: null,
     userName: null,
     userPhoto: null,
-    userNickname: null,
     userProfile: null,
     isSignedIn: false,
     noAccount: false,
@@ -27,14 +26,12 @@ export const mutations = {
     showUserdata (state, payload) {
         state.userName = payload.name
         state.userId = payload.id
-        state.userEmail = payload.mail
         state.isSignedIn = true
     },
     deleteUser (state) {
         state.userEmail = null
         state.userName = null
         state.userPhoto = null
-        state.userNickname = null
         state.isSignedIn = false
         state.noAccount = true
         state.userTweet = null
@@ -44,8 +41,7 @@ export const mutations = {
         state.userId = null
     },
     saveUserdata (state, payload) {
-        console.log('mutation saveUserdata' + payload);
-        state.userNickname = payload.name;
+        state.userName = payload.name;
         state.userProfile = payload.profile;
         state.userId = payload.id;
         state.create = true;
@@ -54,14 +50,6 @@ export const mutations = {
         state.userTweet.unshift(payload);
         state.userTweetId++
         console.log('save usertweet')
-    },
-    rebornTweet (state, payload) {
-        for (let i = 0, iz = payload.length; i < iz; i++) {
-            state.userTweet.unshift(payload[i]);
-        }
-        state.userTweetId = payload.length;
-        state.init = true;
-        console.log('reborn:' + state.userTweet)
     },
     toCreateUserPage () {
         if (!state.create) return;
@@ -87,7 +75,7 @@ export const actions = {
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
                 let { email, displayName, photoURL } = user
-                console.log(user)
+                console.log('googleAuthStateChanged')
                 commit('storeUser', { userEmail: email, userName: displayName, userPhoto: photoURL })
                 dispatch('userCheck', email)
             } else {
@@ -102,7 +90,7 @@ export const actions = {
     userCheck ({ dispatch, commit, state }, email) {
         db.collection('users').doc(email).get().then((doc) => {
             if (doc.exists) {
-                console.log(doc)
+                console.log('userCheck', state.userEmail)
                 const id = doc.data().id
                 dispatch('showUserdata', id)
                 // commit('saveUserdata', doc.data().data)
@@ -117,12 +105,11 @@ export const actions = {
         })
     },
 
-    showUserdata({ commit }, payload) {
+    showUserdata ({ commit }, payload) {
         db.collection('userid').doc(payload).get()
         .then(function (doc) {
-            const userdata = doc.data()
+            const userdata = doc.data().data
             userdata.id = payload
-            console.log(userdata)
             commit('showUserdata', userdata)
         })
         .catch((err) => {
@@ -137,14 +124,18 @@ export const actions = {
      */
     createUser ({ dispatch, state, commit }, payload) {
         console.log('create')
-        console.log(payload)
-        const data = payload
+        const data = {
+            name: payload.name,
+            profile: payload.profile,
+            mail: state.userEmail,
+            id: payload.id,
+            photo: state.userPhoto
+        }
         const id = payload.id
-        console.log(state)
+        console.log('doc', state.userEmail)
         db.collection('users').doc(state.userEmail).set({ id }).then(() => {
             dispatch('saveUserdata', data)
-            console.log('ほげほげ')
-            // location.href = '/mypage'
+            location.href = `/users/${id}/`
         }).catch((error) => {
             console.error("Error writing document: ", error);
         });
@@ -156,12 +147,6 @@ export const actions = {
      */
     saveUserdata ({ dispatch, state, commit }, payload) {
         const data = payload
-        const name = {
-            name: payload.name
-        }
-        const profile = {
-            profile: payload.profile
-        }
         // ユーザーID情報を保存
         db.collection('userid').doc(payload.id).set({ data }).then(() => {
             console.log('userid saved');
@@ -170,15 +155,6 @@ export const actions = {
             console.error("Error writing document: ", error);
         })
 
-    },
-    saveTweet ({ state, commit }, payload) {
-        payload.id = state.userTweetId
-        db.collection('users').doc(state.userEmail).collection('tweet').add(payload).then(() => {
-            console.log('save tweet')
-            commit('saveTweet', payload);
-        }).catch((error) => {
-            console.error("Error writing document: ", error);
-        })
     },
 }
 export const getters = {
@@ -191,10 +167,9 @@ export const getters = {
             name: state.userName,
             profile: state.userProfile,
             photo: state.userPhoto,
-            nickname: state.userNickname,
             tweet: state.userTweet,
             tweetId: state.userTweetId,
-            uid: state.userId
+            id: state.userId
         }
         return data;
     },
