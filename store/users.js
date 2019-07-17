@@ -8,6 +8,7 @@ export const state = () => ({
     userEmail: null,
     userName: null,
     userPhoto: null,
+    userUrl: null,
     userProfile: null,
     isSignedIn: false,
     noAccount: false,
@@ -24,9 +25,16 @@ export const mutations = {
         state.userEmail = payload.userEmail
     },
     showUserdata (state, payload) {
+        console.log('payload', payload)
         state.userName = payload.name
         state.userId = payload.id
+        state.userEmail = payload.mail
+        state.userUrl = payload.url
+        state.userProfile = payload.profile
         state.isSignedIn = true
+
+            console.log('commit showUserdata')
+
     },
     deleteUser (state) {
         state.userEmail = null
@@ -147,6 +155,7 @@ export const actions = {
      */
     saveUserdata ({ dispatch, state, commit }, payload) {
         const data = payload
+        data.photo = state.userPhoto
         // ユーザーID情報を保存
         db.collection('userid').doc(payload.id).set({ data }).then(() => {
             console.log('userid saved');
@@ -169,7 +178,8 @@ export const getters = {
             photo: state.userPhoto,
             tweet: state.userTweet,
             tweetId: state.userTweetId,
-            id: state.userId
+            id: state.userId,
+            url: state.userUrl
         }
         return data;
     },

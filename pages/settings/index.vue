@@ -3,21 +3,19 @@
         <h2 class="settings-heading">Settings</h2>
         <ul class="settings-forms">
             <li class="settings-forms-form">
-                <p class="form-label">ユーザーID</p>
-                <input class="form-input" type="text" v-model="newUid" :placeholder="userdata.uid" />
-                <p v-if="errorUid" class="form-error">ユーザーIDを入力してください</p>
+                <p class="form-label">名前</p>
+                <input class="form-input" type="text" v-model="userdata.name" :placeholder="userdata.name" />
             </li>
             <li class="settings-forms-form">
-                <p class="form-label">ニックネーム</p>
-                <input class="form-input" type="text" v-model="newNickname" :placeholder="userdata.nickname" />
-                <p v-if="errorNickname" class="form-error">ニックネームを入力してください</p>
+                <p class="form-label">プロフィール</p>
+                <textarea class="form-input" type="text" v-model="userdata.profile" style="height: 80px" :placeholder="userdata.profile" />
             </li>
             <li class="settings-forms-form">
-                <p class="form-label">自己紹介</p>
-                <textarea class="form-input" type="text" v-model="newProfile" style="height: 80px" :placeholder="userdata.profile" />
+                <p class="form-label">URL</p>
+                <input class="form-input" type="text" v-model="userdata.url" :placeholder="userdata.url" />
             </li>
         </ul>
-        <p class="settings-button" @click="saveUserdata(newNickname, newProfile, newUid)">更新する</p>
+        <p class="settings-button" @click="saveUserdata(userdata.name,userdata.profile, userdata.url)">更新する</p>
     </section>
 </template>
 
@@ -31,41 +29,27 @@ export default {
     },
     data () {
         return {
-            newNickname: '',
-            newProfile: '',
-            newUid: '',
-            errorNickname: false,
-            errorUid: false
         }
     },
     computed: {
         ...mapGetters({
             userdata: 'users/getUserdata',
         }),
-        userName: function () {
-            if(!this.userdata) return '';
-            return this.userdata.nickname ? this.userdata.nickname : this.userdata.name;
-        },
     },
     mounted () {
-        console.log(this.userdata)
     },
     created () {
     },
     methods: {
-        saveUserdata (newNickname, newProfile, newUid) {
-            if(newNickname.length == 0 || newProfile.length == 0) {
-                return this.errorNickname = true;
-            }
+        saveUserdata (newName, newProfile, newUrl) {
+            if(newName.length == 0) return;
             const data = {
-                nickname: newNickname,
+                name: newName,
                 profile: newProfile,
-                uid: newUid
+                url: newUrl,
+                id: this.userdata.id
             }
             this.$store.dispatch('users/saveUserdata', data);
-            this.newNickname = data.nickname;
-            this.newProfile = data.profile;
-            this.newUid = data.uid
         },
     },
 }
