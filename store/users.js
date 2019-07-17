@@ -153,21 +153,6 @@ export const actions = {
             console.error("Error writing document: ", error);
         })
     },
-
-    accessedUserpage ({ state, commit }, payload) {
-        // childだけでとれないか修正する
-        db.collection('users').get()
-        .then(function(querySnapshot) {
-            querySnapshot.forEach(function (doc) {
-                console.log(doc.data().data.uid)
-
-            })
-            // console.log(querySnapshot)
-        })
-        .catch((err) => {
-            console.error(err)
-        })
-    }
 }
 export const getters = {
     getSignStatus (state) {
