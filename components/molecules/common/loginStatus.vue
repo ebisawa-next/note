@@ -5,11 +5,10 @@
         </p>
         <ul class="signin-infos" v-if="isInfosShow" @click="onLinkClicked">
             <li class="signin-infos-info">
-                <p class="signin-infos-username"
-                    v-text="userdata.nickname ? userdata.nickname : userdata.name"></p>
+                <p class="signin-infos-username" v-text="userdata.name"></p>
             </li>
             <li class="signin-infos-info is-link">
-                <nuxt-link to="/mypage" class="signin-infos-link">
+                <nuxt-link :to="userpage" class="signin-infos-link">
                     マイページ
                 </nuxt-link>
             </li>
@@ -67,6 +66,9 @@ export default {
         caseClass: function () {
             if(this.case == '') return;
             return `is-${this.case}`
+        },
+        userpage: function () {
+            return `/users/${this.userdata.uid}`
         }
     },
     mounted () {

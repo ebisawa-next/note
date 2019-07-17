@@ -16,14 +16,17 @@ export const state = () => ({
     init: false,
     userTweetId: 0,
     userId: null,
-    create: false
+    create: false,
 })
 export const mutations = {
     ...vuexfireMutations,
     storeUser (state, payload) {
-        state.userEmail = payload.userEmail
-        state.userName = payload.userName
         state.userPhoto = payload.userPhoto
+    },
+    showUserdata (state, payload) {
+        state.userName = payload.name
+        state.userId = payload.id
+        state.userEmail = payload.mail
         state.isSignedIn = true
     },
     deleteUser (state) {
@@ -83,23 +86,25 @@ export const actions = {
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
                 let { email, displayName, photoURL } = user
+                console.log(user)
                 commit('storeUser', { userEmail: email, userName: displayName, userPhoto: photoURL })
-                dispatch('userCheck')
+                dispatch('userCheck', email)
             } else {
                 commit('deleteUser')
             }
         })
     },
-    userCheck ({ dispatch, commit, state }) {
-        db.collection('users').doc(state.userEmail).get().then((doc) => {
+    /**
+     * ユーザーが存在するかチェックする
+     * @param {*} param0 
+     */
+    userCheck ({ dispatch, commit, state }, email) {
+        db.collection('users').doc(email).get().then((doc) => {
             if (doc.exists) {
-                const userData = doc.data().data
-                commit('saveUserdata', doc.data().data)
-
-                const tweetData = {
-                    userTweetId: state.userTweetId,
-                    userId: doc.data.userId
-                }
+                console.log(doc)
+                const id = doc.data().id
+                dispatch('showUserdata', id)
+                // commit('saveUserdata', doc.data().data)
             } else {
                 console.log("No such document!")
                 commit('toCreateUserPage')
@@ -109,29 +114,37 @@ export const actions = {
         }).catch((error) => {
             console.error("Error getting document:", error)
         })
-        console.log(state.init)
-        if(!state.init) {
-            const tweetDB = db.collection('users').doc(state.userEmail).collection('tweet');
-            tweetDB.orderBy('id').get().then((query) => {
-                const records = query.docs.map(elem => elem.data());
-                commit('rebornTweet', records)
-                console.log(records)
-            }).catch((error) => {
-                console.error("Error getting document:", error)
-            });
-        }
     },
+
+    showUserdata({ commit }, payload) {
+        db.collection('userid').doc(payload).get()
+        .then(function (doc) {
+            const userdata = doc.data()
+            userdata.id = payload
+            console.log(userdata)
+            commit('showUserdata', userdata)
+        })
+        .catch((err) => {
+            console.error(err)
+        })
+    },
+
+    /**
+     * クリエイトページで送られた情報を操作するハンドラ
+     * @param {*} param0 
+     * @param {*} payload 
+     */
     createUser ({ state, commit }, payload) {
         const data = payload
         db.collection('users').doc(state.userEmail).set({ data }).then(() => {
             commit('saveUserdata', data)
-            location.href = '/mypage'
+            // location.href = '/mypage'
         }).catch((error) => {
             console.error("Error writing document: ", error);
         });
     },
     /**
-     * ユーザーデータを登録する
+     * 新規ユーザーデータを登録する
      * @param {Object} param0 
      * @param {Object} payload nickname, profile
      */
