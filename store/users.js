@@ -22,6 +22,7 @@ export const mutations = {
     ...vuexfireMutations,
     storeUser (state, payload) {
         state.userPhoto = payload.userPhoto
+        state.userEmail = payload.userEmail
     },
     showUserdata (state, payload) {
         state.userName = payload.name
@@ -44,9 +45,9 @@ export const mutations = {
     },
     saveUserdata (state, payload) {
         console.log('mutation saveUserdata' + payload);
-        state.userNickname = payload.nickname;
+        state.userNickname = payload.name;
         state.userProfile = payload.profile;
-        state.userId = payload.uid;
+        state.userId = payload.id;
         state.create = true;
     },
     saveTweet (state, payload) {
@@ -134,10 +135,15 @@ export const actions = {
      * @param {*} param0 
      * @param {*} payload 
      */
-    createUser ({ state, commit }, payload) {
+    createUser ({ dispatch, state, commit }, payload) {
+        console.log('create')
+        console.log(payload)
         const data = payload
-        db.collection('users').doc(state.userEmail).set({ data }).then(() => {
-            commit('saveUserdata', data)
+        const id = payload.id
+        console.log(state)
+        db.collection('users').doc(state.userEmail).set({ id }).then(() => {
+            dispatch('saveUserdata', data)
+            console.log('ほげほげ')
             // location.href = '/mypage'
         }).catch((error) => {
             console.error("Error writing document: ", error);
@@ -146,16 +152,24 @@ export const actions = {
     /**
      * 新規ユーザーデータを登録する
      * @param {Object} param0 
-     * @param {Object} payload nickname, profile
+     * @param {Object} payload
      */
-    saveUserdata ({ state, commit }, payload) {
+    saveUserdata ({ dispatch, state, commit }, payload) {
         const data = payload
-        db.collection('users').doc(state.userEmail).set({ data }).then(() => {
-            console.log('db saved')
-            commit('saveUserdata', data);
+        const name = {
+            name: payload.name
+        }
+        const profile = {
+            profile: payload.profile
+        }
+        // ユーザーID情報を保存
+        db.collection('userid').doc(payload.id).set({ data }).then(() => {
+            console.log('userid saved');
+            dispatch('showUserdata', payload.id);
         }).catch((error) => {
             console.error("Error writing document: ", error);
         })
+
     },
     saveTweet ({ state, commit }, payload) {
         payload.id = state.userTweetId
