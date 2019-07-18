@@ -4,15 +4,15 @@
         <ul class="settings-forms">
             <li class="settings-forms-form">
                 <p class="form-label">名前</p>
-                <input class="form-input" type="text" v-model="userdata.name" :placeholder="userdata.name" />
+                <input class="form-input" type="text" v-model="userdata.name" placeholder="例）おしゅし" />
             </li>
             <li class="settings-forms-form">
                 <p class="form-label">プロフィール</p>
-                <textarea class="form-input" type="text" v-model="userdata.profile" style="height: 80px" :placeholder="userdata.profile" />
+                <textarea class="form-input" type="text" v-model="userdata.profile" style="height: 80px" placeholder="例）寿司が好きです" />
             </li>
             <li class="settings-forms-form">
                 <p class="form-label">URL</p>
-                <input class="form-input" type="text" v-model="userdata.url" :placeholder="userdata.url" />
+                <input class="form-input" type="text" v-model="userdata.url" placeholder="https://oshushi.com" />
             </li>
         </ul>
         <p class="settings-button" @click="saveUserdata(userdata.name,userdata.profile, userdata.url)">更新する</p>
@@ -107,7 +107,7 @@ $oshushi: map-get($color-service, accent);
         display: block;
         font-size: 1.6rem;
         &::placeholder {
-            color: #000;
+            color: #a5a5a5
         }
         &:hover,
         &:focus {

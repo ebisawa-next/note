@@ -1,22 +1,30 @@
 import { vuexfireMutations, firestoreAction } from 'vuexfire'
-import { db } from '../plugins/firebase';
+import { db } from '../plugins/firebase'
+const ref = db.collection('userid')
+
 export const state = () => ({
-    notes: [],
+    userdatas: []
 })
 export const mutations = {
-    ...vuexfireMutations
+    ...vuexfireMutations,
+    storeUserdatas(state, payload) {
+        state.userdatas = payload
+        console.log(state.userdatas)
+    }
 }
 export const actions = {
-    setNotesRef: firestoreAction(({ bindFirestoreRef }, ref) => {
-        bindFirestoreRef('notes', ref)
-    }),
-
-    saveNote ({ dispatch }, newNote) {
-        db.collection('notes').add(newNote);
+    storeUserdatas ({ state, commit}) {
+        const userdatas = []
+        ref.get().then(function (querySnapshot) {
+            querySnapshot.docs.forEach((doc) => {
+                userdatas.push(doc.data().data)
+            })
+            commit('storeUserdatas', userdatas)
+        })
     }
 }
 export const getters = {
-    getNotes: (state) => {
-        return state.notes
+    getUserdatas: (state) => {
+        return state.userdatas
     },
 }
