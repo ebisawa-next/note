@@ -26,7 +26,7 @@ export const actions = {
     // tweetsをバインディングする
     setTweetsRef: firestoreAction(({ bindFirestoreRef }, id) => {
         console.log(id)
-        bindFirestoreRef('tweets', ref.doc(id).collection('tweets'))
+        bindFirestoreRef('tweets', ref.doc(id).collection('tweets').orderBy('id', 'desc'))
     }),
     accessedUserpage ({ dispatch }, payload) {
         dispatch('showUserdata', payload);

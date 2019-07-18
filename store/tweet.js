@@ -23,7 +23,7 @@ export const mutations = {
     },
     initTweetId(state, id) {
         state.tweetId = id
-        console.log(state.tweetId)
+        console.log('initTweetId')
     },
     saveTweet(state, payload) {
         state.tweetId++
@@ -42,9 +42,13 @@ export const actions = {
     successTweet ({ commit }) {
         commit('successTweet');
     },
+    initTweetId ({ rootState, commit }) {
+        const id = rootState.users.userTweetId
+        commit('initTweetId', id)
+    },
 
-    saveTweet ({ rootState, commit }, payload) {
-        payload.id = rootState.users.userTweetId
+    saveTweet ({ rootState, state, commit }, payload) {
+        payload.id = state.tweetId
         db.collection('userid').doc(rootState.users.userId).collection('tweets').add(payload).then(() => {
             console.log('save tweet')
             commit('saveTweet', payload);

@@ -29,6 +29,8 @@ export default {
     },
     mounted () {
     },
+    created () {
+    },
     methods: {
         getDate () {
             function initNum(num) {

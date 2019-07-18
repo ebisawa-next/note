@@ -45,6 +45,9 @@ export default {
   },
   mounted () {
   },
+  created () {
+    this.$store.dispatch('tweet/initTweetId');
+  },
   methods: {
     openModal () {
       this.$store.dispatch('tweet/openTweetModal');
