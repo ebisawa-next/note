@@ -32,9 +32,10 @@ export const mutations = {
         state.userUrl = payload.url
         state.userProfile = payload.profile
         state.isSignedIn = true
-
-            console.log('commit showUserdata')
-
+    },
+    initUserTweetId (state, id) {
+        state.userTweetId = id;
+        console.log('users init user tweetid', id)
     },
     deleteUser (state) {
         state.userEmail = null
@@ -54,11 +55,6 @@ export const mutations = {
         state.userId = payload.id;
         state.create = true;
     },
-    saveTweet (state, payload) {
-        state.userTweet.unshift(payload);
-        state.userTweetId++
-        console.log('save usertweet')
-    },
     toCreateUserPage () {
         if (!state.create) return;
         location.href = '/mypage'
@@ -67,8 +63,6 @@ export const mutations = {
 }
 export const actions = {
     initStore: firestoreAction(({ bindFirestoreRef }, payload) => {
-        // 渡されたuseridと等しいドキュメントのデータとバインディングしたい
-        console.log(payload.userEmail);
         bindFirestoreRef('users', users.where('userEmail', '==', payload.userEmail));
     }),
     googleSignIn ({ dispatch }) {
@@ -122,6 +116,11 @@ export const actions = {
         })
         .catch((err) => {
             console.error(err)
+        })
+
+        db.collection('userid').doc(payload).collection('tweets').get()
+        .then(function (query) {
+            commit('initUserTweetId', query.size)
         })
     },
 

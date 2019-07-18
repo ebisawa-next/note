@@ -8,11 +8,12 @@
                     <p v-else class="users-photo-image noimage">no image</p>
                     <p class="users-photo-name">{{ userdata.name }}</p>
                     <p>@{{ userdata.id }}</p>
+                    <a :href="userdata.url" target="_blank">{{ userdata.url }}</a>
                 </figure>
                 <p v-if="userdata.profile" class="users-photo-caption">{{ userdata.profile }}</p>
             </aside>
             <article class="timelines">
-                <ul class="timelines-items" v-if="tweets">
+                <ul class="timelines-items" v-if="hasTweets">
                     <li v-for="(tweet, index) in tweets" :key="index" class="timelines-items-item">
                         <div class="timelines-tweet-head">
                             <p class="timelines-tweet-head-name">{{ userdata.name}}</p>
@@ -21,7 +22,9 @@
                         <p class="timelines-tweet-text">{{ tweet.tweet }}</p>
                         <ul class="timelines-actions">
                             <li class="timelines-actions-action">
-                                はーと
+                                <p class="timelines-actions-action-favorite" @click="addFavorite()">
+                                    はーと{{ tweet.favorite }}
+                                </p>
                             </li>
                             <li class="timelines-actions-action">
                                 こめんと
@@ -59,14 +62,21 @@ export default {
             userdata: 'userid/getUserdata',
             tweets: 'userid/getTweets',
         }),
+        hasTweets () {
+            return true
+        }
     },
     mounted () {
         console.log(this.$route.params.userId)
         this.$store.dispatch('userid/accessedUserpage', this.$route.params.userId)
     },
     created () {
+        this.$store.dispatch('userid/setTweetsRef', this.$route.params.userId)
     },
     methods: {
+        addFavorite () {
+            this.$store.dispatch('tweet/addFavorite');
+        }
     },
 }
 </script>

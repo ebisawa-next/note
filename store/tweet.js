@@ -1,9 +1,11 @@
 import { vuexfireMutations, firestoreAction } from 'vuexfire'
 import { db } from '../plugins/firebase';
+const ref = db.collection('userid')
 export const state = () => ({
     isTweetModalShow: false,
     isTweetSuccess: false,
-    tweets: null,
+    tweets: [],
+    tweetId: 0,
 })
 export const mutations = {
     ...vuexfireMutations,
@@ -19,8 +21,12 @@ export const mutations = {
         state.isTweetSuccess = true;
         console.log('successTweet')
     },
+    initTweetId(state, id) {
+        state.tweetId = id
+        console.log(state.tweetId)
+    },
     saveTweet(state, payload) {
-        console.log('save usertweet')
+        state.tweetId++
     },
     showTweet(state, payload) {
         state.tweets = payload
@@ -37,9 +43,8 @@ export const actions = {
         commit('successTweet');
     },
 
-    saveTweet ({ rootState, state, commit }, payload) {
+    saveTweet ({ rootState, commit }, payload) {
         payload.id = rootState.users.userTweetId
-
         db.collection('userid').doc(rootState.users.userId).collection('tweets').add(payload).then(() => {
             console.log('save tweet')
             commit('saveTweet', payload);
@@ -47,18 +52,6 @@ export const actions = {
             console.error("Error writing document: ", error);
         })
     },
-
-    showTweet ({ state, commit }, payload) {
-        console.log(payload)
-        db.collection('userid').doc(payload).collection('tweets').orderBy('id').get()
-        .then(function(query) {
-            const records = query.docs.map(elem => elem.data())
-            commit('showTweet', records)
-        })
-        .catch((err) => {
-            console.error(err)
-        })
-    }
 }
 export const getters = {
     getIsTweetModalShow(state) {

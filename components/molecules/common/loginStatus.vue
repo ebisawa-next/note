@@ -74,6 +74,8 @@ export default {
     mounted () {
         this.$store.dispatch('users/googleAuthStateChanged');
     },
+    created () {
+    },
     methods: {
         googleSignIn () {
             this.$store.dispatch('users/googleSignIn');

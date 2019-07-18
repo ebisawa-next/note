@@ -11,9 +11,6 @@ export const state = () => ({
 })
 export const mutations = {
     ...vuexfireMutations,
-    showTweet(state, payload) {
-        state.tweets = payload
-    },
     showUserdata(state, payload) {
         console.log('show', payload)
         state.name = payload.name
@@ -24,24 +21,18 @@ export const mutations = {
         state.photo = payload.photo
     }
 }
+const ref = db.collection('userid')
 export const actions = {
+    // tweetsをバインディングする
+    setTweetsRef: firestoreAction(({ bindFirestoreRef }, id) => {
+        console.log(id)
+        bindFirestoreRef('tweets', ref.doc(id).collection('tweets'))
+    }),
     accessedUserpage ({ dispatch }, payload) {
-        dispatch('showTweet', payload);
         dispatch('showUserdata', payload);
     },
-
-    showTweet ({ commit }, payload) {
-        db.collection('userid').doc(payload).collection('tweets').orderBy('id').get()
-        .then(function(query) {
-            const records = query.docs.map(elem => elem.data())
-            commit('showTweet', records)
-        })
-        .catch((err) => {
-            console.error(err)
-        })
-    },
     showUserdata ({ commit }, payload) {
-        db.collection('userid').doc(payload).get()
+        ref.doc(payload).get()
         .then(function (doc) {
             const userdata = doc.data().data
             userdata.id = payload
