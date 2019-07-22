@@ -15,21 +15,23 @@
             <article class="timelines">
                 <ul class="timelines-items" v-if="hasTweets">
                     <li v-for="(tweet, index) in tweets" :key="index" class="timelines-items-item">
-                        <div class="timelines-tweet-head">
-                            <p class="timelines-tweet-head-name">{{ userdata.name}}</p>
-                            <time class="timelines-tweet-head-time">{{ tweet.date }}</time>
-                        </div>
-                        <p class="timelines-tweet-text">{{ tweet.tweet }}</p>
-                        <ul class="timelines-actions">
-                            <li class="timelines-actions-action">
-                                <p class="timelines-actions-action-favorite" @click="addFavorite()">
-                                    はーと{{ tweet.favorite }}
-                                </p>
-                            </li>
-                            <li class="timelines-actions-action">
-                                こめんと
-                            </li>
-                        </ul>
+                        <nuxt-link :to="userdata.id+'/'+tweet.tweetid" class="timelines-items-item-link">
+                            <div class="timelines-tweet-head">
+                                <p class="timelines-tweet-head-name">{{ userdata.name}}</p>
+                                <time class="timelines-tweet-head-time">{{ tweet.date }}</time>
+                            </div>
+                            <p class="timelines-tweet-text">{{ tweet.tweet }}</p>
+                            <ul class="timelines-actions">
+                                <li class="timelines-actions-action">
+                                    <p class="timelines-actions-action-favorite" @click="addFavorite()">
+                                        はーと{{ tweet.favorite }}
+                                    </p>
+                                </li>
+                                <li class="timelines-actions-action">
+                                    こめんと
+                                </li>
+                            </ul>
+                        </nuxt-link>
                     </li>
                 </ul>
                 <p v-else>まだツイートが投稿されていません</p>
@@ -112,6 +114,13 @@ export default {
         box-sizing: border-box;
         &:not(:first-child) {
             border-top: 1px solid map-get($color-service, border);
+        }
+        &-link {
+            text-decoration: none;
+            color: inherit;
+            @include hover-transition {
+                color: map-get($color-service, accent);
+            }
         }
     }
     &-tweet {

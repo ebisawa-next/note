@@ -48,7 +48,7 @@ export const actions = {
     },
 
     saveTweet ({ rootState, state, commit }, payload) {
-        payload.id = state.tweetId
+        payload.tweetid = state.tweetId
         db.collection('userid').doc(rootState.users.userId).collection('tweets').add(payload).then(() => {
             console.log('save tweet')
             commit('saveTweet', payload);
