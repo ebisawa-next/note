@@ -9,6 +9,8 @@ export const state = () => ({
     mail: null,
     photo: null,
     usertweetData: null,
+    following: false,
+    follower: false,
 })
 export const mutations = {
     ...vuexfireMutations,
@@ -23,9 +25,10 @@ export const mutations = {
 
     showUsertweetData(state, payload) {
         state.usertweetData = payload
-    }
+    },
 }
 const ref = db.collection('userid')
+const follow = db.collection('follow')
 export const actions = {
     // tweetsをバインディングする
     setTweetsRef: firestoreAction(({ bindFirestoreRef }, id) => {
@@ -45,7 +48,7 @@ export const actions = {
             console.error(err)
         })
     },
-    accessedUsertweet ({ state, commit }, payload) {
+    accessedUsertweet ({ state, commit, dispatch }, payload) {
         ref.doc(payload.userId).collection('tweets').where("id", "==", payload.tweetId).get()
         .then(function (querySnapshot) {
             const data = querySnapshot.docs[0].data()
@@ -54,7 +57,7 @@ export const actions = {
         .catch(function (error) {
             console.log("Error getting documents: ", error);
         });
-    }
+    },
 }
 export const getters = {
     getTweets(state) {
@@ -76,5 +79,11 @@ export const getters = {
     },
     getUsertweetData(state) {
         return state.usertweetData
+    },
+    getFollowStatus (state) {
+        return {
+            following: state.following,
+            follower: state.follower
+        }
     }
 }

@@ -11,6 +11,7 @@
                     <a :href="userdata.url" target="_blank">{{ userdata.url }}</a>
                 </figure>
                 <p v-if="userdata.profile" class="users-photo-caption">{{ userdata.profile }}</p>
+                <p class="users-follow" :class="{ 'followed': followStatus.followingStatus }" @click="changeFollowState">{{ followingText }}</p>
             </aside>
             <article class="timelines">
                 <ul class="timelines-items" v-if="hasTweets">
@@ -63,14 +64,21 @@ export default {
             isSignedIn: 'users/getSignStatus',
             userdata: 'userid/getUserdata',
             tweets: 'userid/getTweets',
+            followStatus: 'follow/getFollowStatus'
         }),
         hasTweets () {
             return true
+        },
+        followingText () {
+            const text = this.followStatus.followingStatus ? 'フォロー中' : 'フォローする'
+            return text
         }
     },
     mounted () {
         console.log(this.$route.params.userId)
-        this.$store.dispatch('userid/accessedUserpage', this.$route.params.userId)
+        const userId = this.$route.params.userId
+        this.$store.dispatch('userid/accessedUserpage', userId)
+        this.$store.dispatch('follow/setFollowStatus', userId)
     },
     created () {
         this.$store.dispatch('userid/setTweetsRef', this.$route.params.userId)
@@ -78,6 +86,9 @@ export default {
     methods: {
         addFavorite () {
             this.$store.dispatch('tweet/addFavorite');
+        },
+        changeFollowState () {
+            this.$store.dispatch('follow/changeFollowState', this.$route.params.userId)
         }
     },
 }
@@ -192,6 +203,25 @@ export default {
             margin-top: 15px;
         }
 
+    }
+    &-follow {
+        margin-top: 10px;
+        border: 2px solid map-get($color-service, accent);
+        color: map-get($color-service, accent);
+        padding: 10px;
+        text-align: center;
+        background-color: #fff;
+        font-size: 1.4rem;
+        font-weight: bold;
+        border-radius: 20px;
+        &.followed {
+            border-color: map-get($color-service, accent);
+            background-color: map-get($color-service, accent);
+            color: #fff;
+        }
+        @include hover-transition() {
+            opacity: .8;
+        }
     }
 }
 
