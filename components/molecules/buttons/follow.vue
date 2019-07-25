@@ -52,16 +52,16 @@ export default {
         font-size: 1.4rem;
         font-weight: bold;
         border-radius: 20px;
+        border: 2px solid $oshushi;
         &.following {
-            border-color: $oshushi;
             background-color: $oshushi;
             color: #fff;
             @include hover-transition() {
-                background-color: lighten($oshushi, 10%)
+                background-color: lighten($oshushi, 10%);
+                border-color: lighten($oshushi, 10%);
             }
         }
         &.unfollowing {
-            border: 2px solid $oshushi;
             background-color: #fff;
             color: $oshushi;
             @include hover-transition() {

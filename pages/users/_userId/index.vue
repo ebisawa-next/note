@@ -11,7 +11,9 @@
                     <a :href="userdata.url" target="_blank">{{ userdata.url }}</a>
                 </figure>
                 <p v-if="userdata.profile" class="users-photo-caption">{{ userdata.profile }}</p>
-                <Follow />
+                <div class="follow" v-if="otherUserPage">
+                    <Follow />
+                </div>
             </aside>
             <article class="timelines">
                 <ul class="timelines-items" v-if="hasTweets">
@@ -65,13 +67,18 @@ export default {
             isSignedIn: 'users/getSignStatus',
             userdata: 'userid/getUserdata',
             tweets: 'userid/getTweets',
+            isSignedIn: 'users/getSignStatus',
         }),
         hasTweets () {
             return true
+        },
+        otherUserPage () {
+            if(!this.isSignedIn) return false;
+            if(this.$store.state.users.userId == this.$route.params.userId) return false;
+            return true;
         }
     },
     mounted () {
-        console.log(this.$route.params.userId)
         const userId = this.$route.params.userId
         this.$store.dispatch('userid/accessedUserpage', userId)
         this.$store.dispatch('follow/setFollowStatus', userId)
@@ -198,7 +205,9 @@ export default {
 
     }
 }
-
+.follow {
+    margin-top: 10px;
+}
 .heading {
     font-size: 2.4rem;
 }
