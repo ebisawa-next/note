@@ -1,6 +1,6 @@
 <template>
-    <p class="follow" @click="changeFollowState">
-        <span class="follow-button" :class="followStatus.followingStatus ? 'following' : 'unfollowing'" @click="changeFollowState">
+    <p class="follow">
+        <span class="follow-button" :class="followStatus.isFollowing ? 'following' : 'unfollowing'" @click="changeFollowState">
             {{ followingText }}
         </span>
     </p>
@@ -26,8 +26,7 @@ export default {
             followStatus: 'follow/getFollowStatus'
         }),
         followingText () {
-            const text = this.followStatus.followingStatus ? 'フォロー中' : 'フォローする'
-            return text
+            return this.followStatus.isFollowing ? 'フォロー中' : 'フォローする'
         }
     },
     mounted () {

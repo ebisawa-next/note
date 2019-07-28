@@ -67,7 +67,6 @@ export default {
             isSignedIn: 'users/getSignStatus',
             userdata: 'userid/getUserdata',
             tweets: 'userid/getTweets',
-            isSignedIn: 'users/getSignStatus',
         }),
         hasTweets () {
             return true
@@ -81,7 +80,6 @@ export default {
     mounted () {
         const userId = this.$route.params.userId
         this.$store.dispatch('userid/accessedUserpage', userId)
-        this.$store.dispatch('follow/setFollowStatus', userId)
     },
     created () {
         this.$store.dispatch('userid/setTweetsRef', this.$route.params.userId)
