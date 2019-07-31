@@ -17,9 +17,9 @@
             </aside>
             <article class="timelines">
                 <ul>
-                    <li v-for="(following, index) in followings" :key="index">
-                        <nuxt-link :to="'/users/'+following.id">
-                            <Userinfo :userdata="following" />
+                    <li v-for="(follower, index) in followers" :key="index">
+                        <nuxt-link :to="'/users/'+follower.id">
+                            <Userinfo :userdata="follower" />
                         </nuxt-link>
                     </li>
                 </ul>
@@ -49,7 +49,7 @@ export default {
         ...mapGetters({
             isSignedIn: 'users/getSignStatus',
             userdata: 'userid/getUserdata',
-            followings: 'follow/getFollowings',
+            followers: 'follow/getFollowers',
         }),
         hasTweets () {
             return true
@@ -63,7 +63,7 @@ export default {
     mounted () {
         const userId = this.$route.params.userId
         this.$store.dispatch('userid/accessedUserpage', userId)
-        this.$store.dispatch('follow/setFollowingRef', userId)
+        this.$store.dispatch('follow/setFollowerRef', userId)
     },
     created () {
         this.$store.dispatch('userid/setTweetsRef', this.$route.params.userId)

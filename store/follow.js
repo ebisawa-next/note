@@ -5,7 +5,6 @@ const ref = db.collection('follow')
 const userid = db.collection('userid')
 export const state = () => ({
     followings: [],
-    followingsLength: 0,
     followers: [],
     isFollowing: false,
     isFollower: false,
@@ -19,25 +18,36 @@ export const mutations = {
         state.isFollowing = payload.following
         state.isFollower = payload.follower
     },
-    setFollowingsLength(state, payload) {
-        state.followingsLength = payload
-    },
-    setFollowings(state, payload) {
-        if (state.followings.length >= state.followingsLength) return
+    setFollowings (state, payload) {
         state.followings.push(payload)
+    },
+    setFollowers (state, payload) {
+        state.followers.push(payload)
     },
 }
 export const actions = {
-    async setFollowingRef ({ commit }, payload) {
+    async setFollowingRef ({ state, commit }, payload) {
         // followingユーザーを抽出
         const re = await ref.doc(payload).collection('following').where('following', '==', true).get()
-        await commit('setFollowingsLength', re.size)
+        if (re.size <= state.followings.length) return;
 
         // 抽出したユーザーIDで情報を取得しstateにpushしていく
         re.forEach(async (doc) => {
             const userid = await doc.data().userid
             const d = await db.collection('userid').doc(userid).get()
             await commit('setFollowings', d.data().data)
+        })
+    },
+    async setFollowerRef ({ state, commit }, payload) {
+        // followerユーザーを抽出
+        const re = await ref.doc(payload).collection('follower').where('follower', '==', true).get()
+        if (re.size <= state.followers.length) return;
+
+        // 抽出したユーザーIDで情報を取得しstateにpushしていく
+        re.forEach(async (doc) => {
+            const userid = await doc.data().userid
+            const d = await db.collection('userid').doc(userid).get()
+            await commit('setFollowers', d.data().data)
         })
     },
 

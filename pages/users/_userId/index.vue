@@ -23,7 +23,7 @@
                     </li>
                     <li class="follows-follow">
                         <nuxt-link :to="userdata.id+'/follower'" class="follows-follow-link">
-                            <span class="follows-follow-num">{{ followings.length }}</span>
+                            <span class="follows-follow-num">{{ followers.length }}</span>
                             フォロワー
                         </nuxt-link>
                     </li>
@@ -81,7 +81,8 @@ export default {
             isSignedIn: 'users/getSignStatus',
             userdata: 'userid/getUserdata',
             tweets: 'userid/getTweets',
-            followings: 'follow/getFollowings'
+            followings: 'follow/getFollowings',
+            followers: 'follow/getFollowers'
         }),
         hasTweets () {
             return true
@@ -95,10 +96,12 @@ export default {
     mounted () {
         const userId = this.$route.params.userId
         this.$store.dispatch('userid/accessedUserpage', userId)
-        this.$store.dispatch('follow/setFollowingRef', userId)
     },
     created () {
-        this.$store.dispatch('userid/setTweetsRef', this.$route.params.userId)
+        const userId = this.$route.params.userId
+        this.$store.dispatch('userid/setTweetsRef', userId)
+        this.$store.dispatch('follow/setFollowingRef', userId)
+        this.$store.dispatch('follow/setFollowerRef', userId)
     },
     methods: {
         addFavorite () {
