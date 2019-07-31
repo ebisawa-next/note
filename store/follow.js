@@ -1,29 +1,46 @@
 import { vuexfireMutations, firestoreAction } from 'vuexfire'
 import { db } from '../plugins/firebase'
+import { DH_UNABLE_TO_CHECK_GENERATOR } from 'constants';
 const ref = db.collection('follow')
+const userid = db.collection('userid')
 export const state = () => ({
     followings: [],
+    followingsLength: 0,
     followers: [],
     isFollowing: false,
-    isFollower: false
+    isFollower: false,
 })
 export const mutations = {
     ...vuexfireMutations,
     storeUserdatas(state, payload) {
         state.userdatas = payload
-        console.log(state.userdatas)
     },
     setFollowStatus(state, payload) {
         state.isFollowing = payload.following
         state.isFollower = payload.follower
-        console.log(state.isFollowing, state.isFollower)
+    },
+    setFollowingsLength(state, payload) {
+        state.followingsLength = payload
+    },
+    setFollowings(state, payload) {
+        if (state.followings.length >= state.followingsLength) return
+        state.followings.push(payload)
     },
 }
 export const actions = {
-    setFollowRef: firestoreAction(({ bindFirestoreRef }, id) => {
-        bindFirestoreRef('followings', ref.doc(id).collection('following').where('following', '==', true))
-        bindFirestoreRef('followers', ref.doc(id).collection('follower'))
-    }),
+    async setFollowingRef ({ commit }, payload) {
+        // followingユーザーを抽出
+        const re = await ref.doc(payload).collection('following').where('following', '==', true).get()
+        await commit('setFollowingsLength', re.size)
+
+        // 抽出したユーザーIDで情報を取得しstateにpushしていく
+        re.forEach(async (doc) => {
+            const userid = await doc.data().userid
+            const d = await db.collection('userid').doc(userid).get()
+            await commit('setFollowings', d.data().data)
+        })
+    },
+
     async setFollowStatus ({ rootState, commit, dispatch }, payload) {
         if(!rootState.users.userId) return
         const followingStatus = await dispatch('getFollowingStatus', payload);
@@ -34,7 +51,7 @@ export const actions = {
             follower: followerStatus
         }
 
-        commit('setFollowStatus', data)
+        await commit('setFollowStatus', data)
     },
     async changeFollowState ({ rootState, state, commit, dispatch }, payload) {
         const followingStatus = await dispatch('getFollowingStatus', payload);
@@ -83,6 +100,11 @@ export const actions = {
         const followerStatus = !followerData.empty ? followerData.docs[0].data().follower : false
         return followerStatus
     },
+
+    async getFollowingUserdata ({ commit }, payload) {
+        const followingUserdata = await db.collection('userid').doc(payload).get()
+        await commit('getFollowingUserdata', followingUserdata.data().data)
+    }
 }
 export const getters = {
     getFollowings (state) {
@@ -98,5 +120,5 @@ export const getters = {
             isFollowing: state.isFollowing,
             isFollower: state.isFollower
         }
-    }
+    },
 }

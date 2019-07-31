@@ -14,48 +14,16 @@
                 <div class="follow" v-if="otherUserPage">
                     <Follow />
                 </div>
-                <ul class="follows">
-                    <li class="follows-follow">
-                        <nuxt-link :to="`/users/${userdata.id}/following`" class="follows-follow-link">
-                            <span class="follows-follow-num">{{ followings.length }}</span>
-                            フォロー中
-                        </nuxt-link>
-                    </li>
-                    <li class="follows-follow">
-                        <nuxt-link :to="userdata.id+'/follower'" class="follows-follow-link">
-                            <span class="follows-follow-num">{{ followings.length }}</span>
-                            フォロワー
-                        </nuxt-link>
-                    </li>
-                </ul>
             </aside>
             <article class="timelines">
-                <ul class="timelines-items" v-if="hasTweets">
-                    <li v-for="(tweet, index) in tweets" :key="index" class="timelines-items-item">
-                        <nuxt-link :to="userdata.id+'/'+tweet.tweetid" class="timelines-items-item-link">
-                            <div class="timelines-tweet-head">
-                                <p class="timelines-tweet-head-name">{{ userdata.name}}</p>
-                                <time class="timelines-tweet-head-time">{{ tweet.date }}</time>
-                            </div>
-                            <p class="timelines-tweet-text">{{ tweet.tweet }}</p>
-                            <ul class="timelines-actions">
-                                <li class="timelines-actions-action">
-                                    <p class="timelines-actions-action-favorite" @click="addFavorite()">
-                                        はーと{{ tweet.favorite }}
-                                    </p>
-                                </li>
-                                <li class="timelines-actions-action">
-                                    こめんと
-                                </li>
-                            </ul>
+                <ul>
+                    <li v-for="(following, index) in followings" :key="index">
+                        <nuxt-link :to="'/users/'+following.id">
+                            <Userinfo :userdata="following" />
                         </nuxt-link>
                     </li>
                 </ul>
-                <p v-else>まだツイートが投稿されていません</p>
             </article>
-        </section>
-        <section v-else>
-            <p>このユーザーは存在しません</p>
         </section>
     </div>
 </template>
@@ -65,12 +33,13 @@ import { mapGetters } from 'vuex'
 import { db, auth } from '@/plugins/firebase'
 import firebase from 'firebase'
 import Follow from '@/components/molecules/buttons/follow'
+import Userinfo from '@/components/molecules/blocks/userinfo'
 export default {
     validate ({ params }) {
         return /^[a-zA-Z0-9]+$/.test(params.userId)
     },
     components: {
-        Follow
+        Follow, Userinfo
     },
     data () {
         return {
@@ -80,8 +49,8 @@ export default {
         ...mapGetters({
             isSignedIn: 'users/getSignStatus',
             userdata: 'userid/getUserdata',
-            tweets: 'userid/getTweets',
-            followings: 'follow/getFollowings'
+            followings: 'follow/getFollowings',
+            followingUserdata: 'follow/getFollowingUserdata'
         }),
         hasTweets () {
             return true
@@ -222,30 +191,6 @@ export default {
 .follow {
     margin-top: 10px;
 }
-
-.follows {
-    margin-top: 15px;
-    &-follow {
-        display: inline-flex;
-        &:not(:first-child) {
-            margin-left: 10px;
-        }
-        &-link {
-            font-size: 1.2rem;
-            color: inherit;
-            text-decoration: none;
-            @include hover-transition {
-                color: map-get($color-service, accent);
-            }
-        }
-        &-num {
-            font-weight: bold;
-            font-size: 1.4rem;
-        }
-    }
-}
-
-
 .heading {
     font-size: 2.4rem;
 }
