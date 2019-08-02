@@ -1,13 +1,13 @@
 <template>
-    <div class="user-info">
-        <figure class="user-info-icon">
+    <div class="user-list">
+        <figure class="user-list-icon">
             <img :src="userdata.photo" v-if="userdata.photo">
             <figcaption v-else>no image</figcaption>
         </figure>
-        <div class="user-info-content">
-            <p class="user-info-name">{{ userdata.name }}</p>
-            <p class="user-info-id">@{{ userdata.id }}</p>
-            <p class="user-info-profile">{{ userdata.profile }}</p>
+        <div class="user-list-content">
+            <p class="user-list-name">{{ userdata.name }}</p>
+            <p class="user-list-id">@{{ userdata.id }}</p>
+            <p class="user-list-profile">{{ userdata.profile }}</p>
         </div>
     </div>
 </template>
@@ -33,8 +33,6 @@ export default {
         }
     },
     computed: {
-        ...mapGetters({
-        }),
     },
     mounted () {
     },
@@ -47,7 +45,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.user-info {
+.user-list {
     padding: 15px 10px;
     display: flex;
     &-icon {

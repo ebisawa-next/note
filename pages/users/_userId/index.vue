@@ -1,6 +1,6 @@
 <template>
     <div>
-        <section class="user-header"></section>
+        <UserHeader />
         <section v-if="userdata" class="container">
             <UserInfo />
             <article class="timelines">
@@ -38,13 +38,14 @@
 import { mapGetters } from 'vuex'
 import { db, auth } from '@/plugins/firebase'
 import firebase from 'firebase'
+import UserHeader from '@/components/molecules/blocks/userHeader'
 import UserInfo from '@/components/organisms/users/userInfo'
 export default {
     validate ({ params }) {
         return /^[a-zA-Z0-9]+$/.test(params.userId)
     },
     components: {
-        UserInfo
+        UserInfo, UserHeader
     },
     data () {
         return {
@@ -82,18 +83,6 @@ export default {
         width: 80%;
         margin: 0 auto;
         flex-direction: row;
-    }
-}
-.user-header {
-    display: block;
-    height: 150px;
-    background:
-        color-gradient(.8),
-        url(~assets/images/index/sushi.jpg);
-    background-size: cover;
-    background-attachment: fixed;
-    @include mq {
-        height: 300px;
     }
 }
 .timelines {

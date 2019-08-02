@@ -19,7 +19,7 @@
                 </nuxt-link>
             </li>
             <li class="follows-follow">
-                <nuxt-link :to="userdata.id+'/follower'" class="follows-follow-link">
+                <nuxt-link :to="`/users/${userdata.id}/follower`" class="follows-follow-link">
                     <span class="follows-follow-num">{{ followers.length }}</span>
                     フォロワー
                 </nuxt-link>
