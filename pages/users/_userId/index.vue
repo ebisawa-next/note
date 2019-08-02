@@ -7,21 +7,7 @@
                 <ul class="timelines-items" v-if="hasTweets">
                     <li v-for="(tweet, index) in tweets" :key="index" class="timelines-items-item">
                         <nuxt-link :to="userdata.id+'/'+tweet.tweetid" class="timelines-items-item-link">
-                            <div class="timelines-tweet-head">
-                                <p class="timelines-tweet-head-name">{{ userdata.name}}</p>
-                                <time class="timelines-tweet-head-time">{{ tweet.date }}</time>
-                            </div>
-                            <p class="timelines-tweet-text">{{ tweet.tweet }}</p>
-                            <ul class="timelines-actions">
-                                <li class="timelines-actions-action">
-                                    <p class="timelines-actions-action-favorite" @click="addFavorite()">
-                                        はーと{{ tweet.favorite }}
-                                    </p>
-                                </li>
-                                <li class="timelines-actions-action">
-                                    こめんと
-                                </li>
-                            </ul>
+                            <Tweet :username="userdata.name" :tweet="tweet" />
                         </nuxt-link>
                     </li>
                 </ul>
@@ -40,12 +26,13 @@ import { db, auth } from '@/plugins/firebase'
 import firebase from 'firebase'
 import UserHeader from '@/components/molecules/blocks/userHeader'
 import UserInfo from '@/components/organisms/users/userInfo'
+import Tweet from '@/components/molecules/blocks/tweet'
 export default {
     validate ({ params }) {
         return /^[a-zA-Z0-9]+$/.test(params.userId)
     },
     components: {
-        UserInfo, UserHeader
+        UserInfo, UserHeader, Tweet
     },
     data () {
         return {
