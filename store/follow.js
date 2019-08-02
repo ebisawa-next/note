@@ -24,12 +24,18 @@ export const mutations = {
     setFollowers (state, payload) {
         state.followers.push(payload)
     },
+    initFollowings (state, payload) {
+        state.followings = []
+    },
+    initFollowers (state) {
+        state.followers = []
+    }
 }
 export const actions = {
     async setFollowingRef ({ state, commit }, payload) {
+        commit('initFollowings')
         // followingユーザーを抽出
         const re = await ref.doc(payload).collection('following').where('following', '==', true).get()
-        if (re.size <= state.followings.length) return;
 
         // 抽出したユーザーIDで情報を取得しstateにpushしていく
         re.forEach(async (doc) => {
@@ -39,9 +45,9 @@ export const actions = {
         })
     },
     async setFollowerRef ({ state, commit }, payload) {
+        commit('initFollowers')
         // followerユーザーを抽出
         const re = await ref.doc(payload).collection('follower').where('follower', '==', true).get()
-        if (re.size <= state.followers.length) return;
 
         // 抽出したユーザーIDで情報を取得しstateにpushしていく
         re.forEach(async (doc) => {
