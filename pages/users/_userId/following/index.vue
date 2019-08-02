@@ -2,19 +2,7 @@
     <div>
         <section class="user-header"></section>
         <section v-if="userdata" class="container">
-            <aside class="users">
-                <figure class="users-photo">
-                    <img v-if="userdata.photo" :src="userdata.photo" class="users-photo-image">
-                    <p v-else class="users-photo-image noimage">no image</p>
-                    <p class="users-photo-name">{{ userdata.name }}</p>
-                    <p>@{{ userdata.id }}</p>
-                    <a :href="userdata.url" target="_blank">{{ userdata.url }}</a>
-                </figure>
-                <p v-if="userdata.profile" class="users-photo-caption">{{ userdata.profile }}</p>
-                <div class="follow" v-if="otherUserPage">
-                    <Follow />
-                </div>
-            </aside>
+            <UserInfo />
             <article class="timelines">
                 <ul>
                     <li v-for="(following, index) in followings" :key="index">
@@ -33,13 +21,13 @@ import { mapGetters } from 'vuex'
 import { db, auth } from '@/plugins/firebase'
 import firebase from 'firebase'
 import Follow from '@/components/molecules/buttons/follow'
-import Userinfo from '@/components/molecules/blocks/userinfo'
+import UserInfo from '@/components/organisms/users/userInfo'
 export default {
     validate ({ params }) {
         return /^[a-zA-Z0-9]+$/.test(params.userId)
     },
     components: {
-        Follow, Userinfo
+        Follow, UserInfo
     },
     data () {
         return {
@@ -54,11 +42,6 @@ export default {
         hasTweets () {
             return true
         },
-        otherUserPage () {
-            if(!this.isSignedIn) return false;
-            if(this.$store.state.users.userId == this.$route.params.userId) return false;
-            return true;
-        }
     },
     mounted () {
         const userId = this.$route.params.userId
