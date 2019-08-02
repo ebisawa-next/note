@@ -38,7 +38,7 @@
 import { mapGetters } from 'vuex'
 import { db, auth } from '@/plugins/firebase'
 import firebase from 'firebase'
-import UserInfo from '@/components/organisms/users/userinfo'
+import UserInfo from '@/components/organisms/users/userInfo'
 export default {
     validate ({ params }) {
         return /^[a-zA-Z0-9]+$/.test(params.userId)
@@ -70,9 +70,6 @@ export default {
         this.$store.dispatch('follow/storeFollow', userId)
     },
     methods: {
-        addFavorite () {
-            this.$store.dispatch('tweet/addFavorite');
-        },
     },
 }
 </script>
@@ -145,32 +142,9 @@ export default {
     }
 }
 
-.follow {
-    margin-top: 10px;
-}
 
 .heading {
     font-size: 2.4rem;
 }
 
-.login {
-    padding: 10px;
-    background-color: #ffab00;
-    border-radius: 4px;
-    display: inline-flex;
-}
-
-.information {
-    margin-top: 20px;
-}
-.information tr:not(:first-child) {
-    border-top: 1px solid #d8d8d8;
-}
-.information th,
-.information td {
-    padding: 15px 10px;
-}
-.information th {
-    background-color: #f5f5f5;
-}
 </style>
