@@ -63,7 +63,7 @@ export default {
     mounted () {
         const userId = this.$route.params.userId
         this.$store.dispatch('userid/accessedUserpage', userId)
-        this.$store.dispatch('follow/setFollowerRef', userId)
+        this.$store.dispatch('follow/storeFollow', userId)
     },
     created () {
         this.$store.dispatch('userid/setTweetsRef', this.$route.params.userId)

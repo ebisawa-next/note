@@ -24,14 +24,24 @@ export const mutations = {
     setFollowers (state, payload) {
         state.followers.push(payload)
     },
-    initFollowings (state, payload) {
+    initFollowings (state) {
         state.followings = []
     },
     initFollowers (state) {
         state.followers = []
+    },
+    initFollow (state) {
+        state.followings = []
+        state.followers = []
     }
 }
 export const actions = {
+    async storeFollow ({ state, commit, dispatch }, payload) {
+        commit('initFollow')
+        dispatch('setFollowingRef', payload)
+        dispatch('setFollowerRef', payload)
+    },
+
     async setFollowingRef ({ state, commit }, payload) {
         commit('initFollowings')
         // followingユーザーを抽出

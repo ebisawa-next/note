@@ -100,8 +100,7 @@ export default {
     created () {
         const userId = this.$route.params.userId
         this.$store.dispatch('userid/setTweetsRef', userId)
-        this.$store.dispatch('follow/setFollowingRef', userId)
-        this.$store.dispatch('follow/setFollowerRef', userId)
+        this.$store.dispatch('follow/storeFollow', userId)
     },
     methods: {
         addFavorite () {
