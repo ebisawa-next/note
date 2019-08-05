@@ -1,7 +1,10 @@
 <template>
     <div class="tweet">
         <div class="tweet-head">
-            <p class="tweet-head-name">{{ username }}</p>
+            <p class="tweet-head-name">
+                <span>{{ username }}</span>
+                <span>@{{ userId }}</span>
+            </p>
             <time class="tweet-head-time">{{ tweetDate }}</time>
         </div>
         <p class="tweet-text">{{ tweet.tweet }}</p>
@@ -35,6 +38,10 @@ export default {
         tweetDate () {
             const timestamp = this.tweet.created_at
             return this.$moment(timestamp.seconds*1000).format('YYYY/MM/DD HH:mm:ss')
+        },
+        userId () {
+            const userId = this.tweet.userId
+            return userId ? userId : this.$route.params.userId
         }
     },
     props: {
@@ -58,6 +65,7 @@ export default {
 
 <style lang="scss" scoped>
 .tweet {
+    width: 100%;
     &-text {
         font-size: 1.8rem;
         padding: 10px 0;

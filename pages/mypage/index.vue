@@ -1,8 +1,13 @@
 <template>
     <div>
-        <ul>
-            <li v-for="(tweet, index) in timeline" :key="index">
-                {{tweet}}
+        <ul class="timeline">
+            <li v-for="(tweet, index) in timeline" :key="index" class="timeline-item">
+                <nuxt-link :to="`/users/${tweet.userId}/${tweet.tweetId}`" class="timeline-item-link">
+                    <figure class="timeline-item-icon">
+                        <img v-if="tweet.photo" :src="tweet.photo">
+                    </figure>
+                    <Tweet :tweet="tweet" :username="tweet.username" />
+                </nuxt-link>
             </li>
         </ul>
     </div>
@@ -61,10 +66,10 @@ export default {
         flex-direction: row;
     }
 }
-.timelines {
+.timeline {
     position: relative;
     flex: 1;
-    &-items-item {
+    &-item {
         width: 100%;
         padding: 20px;
         box-sizing: border-box;
@@ -74,34 +79,25 @@ export default {
         &-link {
             text-decoration: none;
             color: inherit;
+            display: flex;
             @include hover-transition {
                 color: map-get($color-service, accent);
             }
         }
-    }
-    &-tweet {
-        &-text {
-            font-size: 1.8rem;
-            padding: 10px 0;
-        }
-        &-head {
+        &-icon {
+            width: 50px;
+            height: 50px;
+            margin-right: 20px;
+            background-color: #f5f5f5;
+            color: #a5a5a5;
+            border-radius: 50%;
             display: flex;
-            justify-content: space-between;
-            &-name {
-                font-size: 1.4rem;
-                font-weight: bold;
-            }
-            &-time {
-                font-size: 1.2rem;
-                color: #a5a5a5;
-            }
-        }
-    }
-    &-actions {
-        display: flex;
-        &-action {
-            &:not(:first-child) {
-                margin-left: 10px;
+            justify-content: center;
+            align-items: center;
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
             }
         }
     }

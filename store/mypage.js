@@ -4,6 +4,7 @@ import firebase from 'firebase';
 
 const userid = db.collection('userid')
 const follow = db.collection('follow')
+
 export const state = () => ({
     timeline: []
 })
@@ -12,7 +13,7 @@ export const mutations = {
     storeMypage(state, payload) {
 
     },
-    showUserTweet (state, payload) {
+    showTimeline (state, payload) {
         state.timeline.push(payload)
     }
 }
@@ -22,7 +23,7 @@ export const actions = {
         let timelineIds = await dispatch('getFollowingUserId', mypageUserId)
         timelineIds.push(mypageUserId)
 
-        await dispatch('showUserTweet', timelineIds)
+        await dispatch('showTimeline', timelineIds)
     },
     async getFollowingUserId ({ state, commit, dispatch }, mypageUserId) {
         const followings = []
@@ -32,13 +33,23 @@ export const actions = {
         })
         return followings
     },
-    async showUserTweet ({ state, commit, dispatch}, ids) {
-        console.log(ids)
+    async showTimeline ({ state, commit, dispatch}, ids) {
         if(state.timeline.length > 0) return;
         for(const id of ids) {
+            let photo,
+                username
             const tweetRef = await userid.doc(id).collection('tweets').get()
+            const userRef = await userid.doc(id).get()
+            photo = await userRef.data().data.photo
+            username = await userRef.data().data.name
             await tweetRef.forEach((doc) => {
-                commit('showUserTweet', doc.data())
+                const data = doc.data()
+                const tweetId = doc.id
+                data.userId = id
+                data.tweetId = tweetId
+                data.photo = photo
+                data.username = username
+                commit('showTimeline', data)
             })
         }
     }

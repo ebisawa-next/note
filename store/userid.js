@@ -57,7 +57,6 @@ export const actions = {
 }
 export const getters = {
     getTweets(state) {
-        console.log(state.tweets)
         if(!state.tweets) return;
         return state.tweets
     },
