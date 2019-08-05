@@ -40,7 +40,10 @@ module.exports = {
   /*
    ** Nuxt.js modules
    */
-  modules: ['@nuxtjs/style-resources'],
+  modules: [
+    '@nuxtjs/style-resources',
+    ['@nuxtjs/moment', ['ja']]
+  ],
   styleResources: {
     scss: [
       '~/assets/scss/common.scss'

@@ -8,6 +8,8 @@ export const state = () => ({
     followers: [],
     isFollowing: false,
     isFollower: false,
+    a: [],
+    b: []
 })
 export const mutations = {
     ...vuexfireMutations,
@@ -41,6 +43,16 @@ export const actions = {
         dispatch('setFollowingRef', payload)
         dispatch('setFollowerRef', payload)
     },
+
+    c: firestoreAction(async ({ bindFirestoreRef }, id) => {
+        const re = await ref.doc(payload).collection('following').where('following', '==', true)
+        bindFirestoreRef('a', re)
+
+        const re2 = await ref.doc(payload).collection('follower').where('follower', '==', true)
+        bindFirestoreRef('b', re)
+
+        console.log(a, b, 'sush')
+    }),
 
     async setFollowingRef ({ state, commit }, payload) {
         commit('initFollowings')

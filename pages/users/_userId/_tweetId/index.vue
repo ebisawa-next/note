@@ -2,7 +2,6 @@
     <div>
         <h3>個別ツイートページ</h3>
         <p>{{ usertweetData }}</p>
-        <p>{{ usertweetData.date }}</p>
     </div>
 </template>
 
@@ -36,7 +35,7 @@ export default {
         console.log(this.$route.params.tweetId)
         const payload = {
             userId: this.$route.params.userId,
-            tweetId: Number(this.$route.params.tweetId)
+            tweetId: this.$route.params.tweetId
         }
         this.$store.dispatch('userid/accessedUsertweet', payload)
         // this.$store.dispatch('userid/accessedUserpage', this.$route.params.userId)

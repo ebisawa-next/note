@@ -10,6 +10,7 @@
 // DB使う場合はfirebase
 import { mapGetters } from 'vuex'
 import { db, auth } from '@/plugins/firebase'
+import firebase from 'firebase'
 export default {
     components: {
 
@@ -32,49 +33,16 @@ export default {
     created () {
     },
     methods: {
-        getDate () {
-            function initNum(num) {
-                if(num >= 10) return num;
-                return `0${num}`
-            }
-
-            const hiduke = new Date();
-            //年・月・日・曜日を取得する
-            var year = hiduke.getFullYear();
-            var month = hiduke.getMonth()+1;
-            var week = hiduke.getDay();
-            var day = hiduke.getDate();
-            var yobi= new Array("日","月","火","水","木","金","土");
-
-            var hour = hiduke.getHours();
-            var minute = hiduke.getMinutes();
-            var second = hiduke.getSeconds();
-
-            month = initNum(month)
-            day = initNum(day)
-
-            hour = initNum(hour)
-            minute = initNum(minute)
-            second = initNum(second)
-
-
-            const sort = `${year}${month}${day}${hour}${minute}${second}`
-
-            return {
-                date: `${year}/${month}/${day}(${yobi[week]})  ${hour}:${minute}:${second}`,
-            }
-        },
         saveTweet (newTweet) {
             if(newTweet.length == 0) return;
-            const date = this.getDate()
             const payload = {
                 tweet: newTweet,
-                date: date.date,
+                created_at: firebase.firestore.Timestamp.fromDate(new Date()),
                 favorite: 0
             }
+            console.log(payload.created_at)
             this.$store.dispatch('tweet/closeTweetModal');
             this.$store.dispatch('tweet/saveTweet', payload);
-            this.$store.dispatch('tweet/successTweet');
             this.newTweet = '';
         },
     }

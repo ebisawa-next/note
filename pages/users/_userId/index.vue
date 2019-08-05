@@ -6,7 +6,7 @@
             <article class="timelines">
                 <ul class="timelines-items" v-if="hasTweets">
                     <li v-for="(tweet, index) in tweets" :key="index" class="timelines-items-item">
-                        <nuxt-link :to="userdata.id+'/'+tweet.tweetid" class="timelines-items-item-link">
+                        <nuxt-link :to="userdata.id+'/'+tweet.id" class="timelines-items-item-link">
                             <Tweet :username="userdata.name" :tweet="tweet" />
                         </nuxt-link>
                     </li>

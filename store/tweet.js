@@ -5,7 +5,6 @@ export const state = () => ({
     isTweetModalShow: false,
     isTweetSuccess: false,
     tweets: [],
-    tweetId: 0,
 })
 export const mutations = {
     ...vuexfireMutations,
@@ -21,13 +20,6 @@ export const mutations = {
         state.isTweetSuccess = true;
         console.log('successTweet')
     },
-    initTweetId(state, id) {
-        state.tweetId = id
-        console.log('initTweetId')
-    },
-    saveTweet(state, payload) {
-        state.tweetId++
-    },
     showTweet(state, payload) {
         state.tweets = payload
     }
@@ -42,16 +34,11 @@ export const actions = {
     successTweet ({ commit }) {
         commit('successTweet');
     },
-    initTweetId ({ rootState, commit }) {
-        const id = rootState.users.userTweetId
-        commit('initTweetId', id)
-    },
-
     saveTweet ({ rootState, state, commit }, payload) {
-        payload.tweetid = state.tweetId
         db.collection('userid').doc(rootState.users.userId).collection('tweets').add(payload).then(() => {
             console.log('save tweet')
             commit('saveTweet', payload);
+            commit('successTweet')
         }).catch((error) => {
             console.error("Error writing document: ", error);
         })

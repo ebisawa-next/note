@@ -32,7 +32,7 @@ const follow = db.collection('follow')
 export const actions = {
     // tweetsをバインディングする
     setTweetsRef: firestoreAction(({ bindFirestoreRef }, id) => {
-        bindFirestoreRef('tweets', ref.doc(id).collection('tweets').orderBy('tweetid', 'desc'))
+        bindFirestoreRef('tweets', ref.doc(id).collection('tweets').orderBy('created_at', 'desc'))
     }),
     accessedUserpage ({ dispatch }, payload) {
         dispatch('showUserdata', payload);
@@ -48,15 +48,11 @@ export const actions = {
             console.error(err)
         })
     },
-    accessedUsertweet ({ state, commit, dispatch }, payload) {
-        ref.doc(payload.userId).collection('tweets').where("id", "==", payload.tweetId).get()
-        .then(function (querySnapshot) {
-            const data = querySnapshot.docs[0].data()
-            commit('showUsertweetData', data)
-        })
-        .catch(function (error) {
-            console.log("Error getting documents: ", error);
-        });
+    async accessedUsertweet ({ state, commit, dispatch }, payload) {
+        const docRef = await ref.doc(payload.userId).collection('tweets').doc(payload.tweetId);
+        const doc = await docRef.get()
+        if(!doc.exists) return
+        await commit('showUsertweetData', doc.data())
     },
 }
 export const getters = {

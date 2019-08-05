@@ -2,16 +2,16 @@
     <div class="tweet">
         <div class="tweet-head">
             <p class="tweet-head-name">{{ username }}</p>
-            <time class="tweet-head-time" v-if="tweet.date">{{ tweet.date }}</time>
+            <time class="tweet-head-time">{{ tweetDate }}</time>
         </div>
         <p class="tweet-text">{{ tweet.tweet }}</p>
-        <ul class="actions">
-            <li class="actions-action">
-                <p class="actions-action-favorite" @click="addFavorite()">
+        <ul class="tweet-actions">
+            <li class="tweet-actions-action">
+                <p class="tweet-actions-action-favorite" @click="addFavorite()">
                     はーと{{ tweet.favorite }}
                 </p>
             </li>
-            <li class="actions-action">
+            <li class="tweet-actions-action">
                 こめんと
             </li>
         </ul>
@@ -32,6 +32,10 @@ export default {
     computed: {
         ...mapGetters({
         }),
+        tweetDate () {
+            const timestamp = this.tweet.created_at
+            return this.$moment().format('YYYY/MM/DD HH:mm:ss')
+        }
     },
     props: {
         username: {
