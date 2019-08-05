@@ -34,7 +34,7 @@ export default {
         }),
         tweetDate () {
             const timestamp = this.tweet.created_at
-            return this.$moment().format('YYYY/MM/DD HH:mm:ss')
+            return this.$moment(timestamp.seconds*1000).format('YYYY/MM/DD HH:mm:ss')
         }
     },
     props: {
