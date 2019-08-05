@@ -1,12 +1,12 @@
 <template>
-    <div>
+    <div class="mypage">
         <ul class="timeline">
             <li v-for="(tweet, index) in timeline" :key="index" class="timeline-item">
                 <nuxt-link :to="`/users/${tweet.userId}/${tweet.tweetId}`" class="timeline-item-link">
                     <figure class="timeline-item-icon">
                         <img v-if="tweet.photo" :src="tweet.photo">
                     </figure>
-                    <Tweet :tweet="tweet" :username="tweet.username" />
+                    <Timeline :tweet="tweet" :username="tweet.username" />
                 </nuxt-link>
             </li>
         </ul>
@@ -17,15 +17,13 @@
 import { mapGetters } from 'vuex'
 import { db, auth } from '@/plugins/firebase'
 import firebase from 'firebase'
-import UserHeader from '@/components/molecules/blocks/userHeader'
-import UserInfo from '@/components/organisms/users/userInfo'
-import Tweet from '@/components/molecules/blocks/tweet'
+import Timeline from '@/components/molecules/blocks/tweet'
 export default {
     validate ({ params }) {
         return /^[a-zA-Z0-9]+$/.test(params.userId)
     },
     components: {
-        UserInfo, UserHeader, Tweet
+        Timeline
     },
     data () {
         return {
@@ -57,9 +55,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container {
-    display: flex;
-    flex-direction: column;
+.mypage {
     @include mq {
         width: 80%;
         margin: 0 auto;

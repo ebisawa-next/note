@@ -39,6 +39,7 @@ export const actions = {
             let photo,
                 username
             const tweetRef = await userid.doc(id).collection('tweets').get()
+            
             const userRef = await userid.doc(id).get()
             photo = await userRef.data().data.photo
             username = await userRef.data().data.name
