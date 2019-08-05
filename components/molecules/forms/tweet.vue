@@ -40,9 +40,12 @@ export default {
                 created_at: firebase.firestore.Timestamp.fromDate(new Date()),
                 favorite: 0
             }
-            console.log(payload.created_at)
             this.$store.dispatch('tweet/closeTweetModal');
             this.$store.dispatch('tweet/saveTweet', payload);
+            this.$store.dispatch({
+                type: 'tweet/init',
+                amout: 5000
+            })
             this.newTweet = '';
         },
     }
