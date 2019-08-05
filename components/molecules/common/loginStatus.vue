@@ -8,7 +8,7 @@
                 <p class="signin-infos-username" v-text="userdata.name"></p>
             </li>
             <li class="signin-infos-info is-link">
-                <nuxt-link :to="userpage" class="signin-infos-link">
+                <nuxt-link to="/mypage" class="signin-infos-link">
                     マイページ
                 </nuxt-link>
             </li>
