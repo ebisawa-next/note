@@ -6,9 +6,7 @@
             <article class="timelines">
                 <ul>
                     <li v-for="(following, index) in followings" :key="index">
-                        <nuxt-link :to="'/users/'+following.id" class="timelines-link">
-                            <Userlist :userdata="following" />
-                        </nuxt-link>
+                        <Userlist :userdata="following" />
                     </li>
                 </ul>
             </article>

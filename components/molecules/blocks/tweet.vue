@@ -1,17 +1,19 @@
 <template>
     <div class="tweet">
-        <div class="tweet-head">
-            <p class="tweet-head-name">
-                <span>{{ username }}</span>
-                <span>@{{ userId }}</span>
-            </p>
-            <time class="tweet-head-time">{{ tweetDate }}</time>
-        </div>
-        <p class="tweet-text">{{ tweet.tweet }}</p>
+        <nuxt-link :to="`/users/${userId}/${tweet.tweetId}`" class="tweet-link">
+            <div class="tweet-head">
+                <p class="tweet-head-name">
+                    <span>{{ username }}</span>
+                    <span class="tweet-head-id">@{{ userId }}</span>
+                </p>
+                <time class="tweet-head-time">{{ tweetDate }}</time>
+            </div>
+            <p class="tweet-text">{{ tweet.tweet }}</p>
+        </nuxt-link>
         <ul class="tweet-actions">
             <li class="tweet-actions-action">
-                <p class="tweet-actions-action-favorite" @click="addFavorite()">
-                    はーと{{ tweet.favorite }}
+                <p class="tweet-actions-action-favorite" @click="addFavorite(tweet)">
+                    はーと{{ favorite }}
                 </p>
             </li>
             <li class="tweet-actions-action">
@@ -30,6 +32,7 @@ export default {
     },
     data () {
         return {
+            favorite: 0
         }
     },
     computed: {
@@ -54,11 +57,25 @@ export default {
             default: null
         }
     },
-    mounted () {
+    async mounted () {
+
     },
-    created () {
+    async created () {
+        const tw = this.tweet
+        tw.userId = this.userId
+        if(!tw.tweetId) {
+            tw.tweetId = tw.id
+        }
+        const favorited = await this.$store.dispatch('favorite/getFavorited', tw)
+        this.favorite = favorited
     },
     methods: {
+        async addFavorite(tweet) {
+            tweet.userId = this.userId
+            console.log(tweet)
+            const newCount = await this.$store.dispatch('favorite/changeFavoriteStatus', tweet)
+            this.favorite = newCount
+        }
     },
 }
 </script>
@@ -66,6 +83,13 @@ export default {
 <style lang="scss" scoped>
 .tweet {
     width: 100%;
+    &-link {
+        text-decoration: none;
+        color: inherit;
+        @include hover-transition {
+            color: map-get($color-service, accent);
+        }
+    }
     &-text {
         font-size: 1.8rem;
         padding: 10px 0;
@@ -80,6 +104,11 @@ export default {
         &-time {
             font-size: 1.2rem;
             color: #a5a5a5;
+        }
+        &-id {
+            font-weight: normal;
+            font-size: 1.2rem;
+            color: #515151;
         }
     }
     &-actions {

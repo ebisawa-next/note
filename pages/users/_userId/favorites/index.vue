@@ -3,18 +3,14 @@
         <UserHeader />
         <section v-if="userdata" class="container">
             <UserInfo />
-            <article class="timelines">
-                <ul class="timelines-items" v-if="hasTweets">
-                    <li v-for="(tweet, index) in tweets" :key="index" class="timelines-items-item">
-                        <Tweet :username="userdata.name" :tweet="tweet" />
-                    </li>
-                </ul>
-                <p v-else>まだツイートが投稿されていません</p>
-            </article>
         </section>
-        <section v-else>
-            <p>このユーザーは存在しません</p>
-        </section>
+        <article class="timelines">
+            <ul class="timelines-items">
+                <li v-for="(favorite, index) in favorites" :key="index" class="timelines-items-item">
+                    <Tweet :username="favorite.username" :tweet="favorite" />
+                </li>
+            </ul>
+        </article>
     </div>
 </template>
 
@@ -40,7 +36,7 @@ export default {
         ...mapGetters({
             isSignedIn: 'users/getSignStatus',
             userdata: 'userid/getUserdata',
-            tweets: 'userid/getTweets',
+            favorites: 'favorite/getFavorites',
         }),
         hasTweets () {
             return true
@@ -52,7 +48,7 @@ export default {
     },
     created () {
         const userId = this.$route.params.userId
-        this.$store.dispatch('userid/setTweetsRef', userId)
+        this.$store.dispatch('favorite/setFavorites', userId)
     },
     methods: {
     },
@@ -78,13 +74,6 @@ export default {
         box-sizing: border-box;
         &:not(:first-child) {
             border-top: 1px solid map-get($color-service, border);
-        }
-    }
-    &-link {
-        text-decoration: none;
-        color: inherit;
-        @include hover-transition {
-            color: map-get($color-service, accent);
         }
     }
 }

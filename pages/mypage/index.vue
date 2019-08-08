@@ -2,12 +2,10 @@
     <div class="mypage">
         <ul class="timeline">
             <li v-for="(tweet, index) in timeline" :key="index" class="timeline-item">
-                <nuxt-link :to="`/users/${tweet.userId}/${tweet.tweetId}`" class="timeline-item-link">
-                    <figure class="timeline-item-icon">
-                        <img v-if="tweet.photo" :src="tweet.photo">
-                    </figure>
-                    <Timeline :tweet="tweet" :username="tweet.username" />
-                </nuxt-link>
+                <figure class="timeline-item-icon">
+                    <img v-if="tweet.photo" :src="tweet.photo">
+                </figure>
+                <Timeline :tweet="tweet" :username="tweet.username" />
             </li>
         </ul>
     </div>
