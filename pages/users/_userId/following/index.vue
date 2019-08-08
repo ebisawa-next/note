@@ -6,7 +6,9 @@
             <article class="timelines">
                 <ul>
                     <li v-for="(following, index) in followings" :key="index">
-                        <Userlist :userdata="following" />
+                        <nuxt-link :to="'/users/'+following.id" class="timelines-link">
+                            <Userlist :userdata="following" />
+                        </nuxt-link>
                     </li>
                 </ul>
             </article>
@@ -45,7 +47,6 @@ export default {
     mounted () {
         const userId = this.$route.params.userId
         this.$store.dispatch('userid/accessedUserpage', userId)
-        this.$store.dispatch('follow/storeFollow', userId)
     },
     created () {
         this.$store.dispatch('userid/setTweetsRef', this.$route.params.userId)

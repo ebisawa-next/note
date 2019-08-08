@@ -60,6 +60,10 @@ export default {
     },
     mounted () {
     },
+    created () {
+        const userId = this.$route.params.userId
+        this.$store.dispatch('follow/storeFollow', userId)
+    },
     methods: {
     }
 }

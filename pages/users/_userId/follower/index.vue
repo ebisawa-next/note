@@ -44,7 +44,6 @@ export default {
     mounted () {
         const userId = this.$route.params.userId
         this.$store.dispatch('userid/accessedUserpage', userId)
-        this.$store.dispatch('follow/storeFollow', userId)
     },
     created () {
     },
