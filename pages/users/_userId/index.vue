@@ -4,6 +4,14 @@
         <section v-if="userdata" class="container">
             <UserInfo />
             <article class="timelines">
+                <ul class="timelines-tabs">
+                    <li>
+                        <nuxt-link :to="`/users/${userId}/`" class="timelines-tabs-tab selected">ツイート</nuxt-link>
+                    </li>
+                    <li>
+                        <nuxt-link :to="`/users/${userId}/favorites/`" class="timelines-tabs-tab">いいね</nuxt-link>
+                    </li>
+                </ul>
                 <ul class="timelines-items" v-if="hasTweets">
                     <li v-for="(tweet, index) in tweets" :key="index" class="timelines-items-item">
                         <Tweet :username="userdata.name" :tweet="tweet" />
@@ -34,6 +42,7 @@ export default {
     },
     data () {
         return {
+            userId: ''
         }
     },
     computed: {
@@ -47,12 +56,11 @@ export default {
         },
     },
     mounted () {
-        const userId = this.$route.params.userId
-        this.$store.dispatch('userid/accessedUserpage', userId)
     },
     created () {
-        const userId = this.$route.params.userId
-        this.$store.dispatch('userid/setTweetsRef', userId)
+        this.userId = this.$route.params.userId
+        this.$store.dispatch('userid/accessedUserpage', this.userId)
+        this.$store.dispatch('userid/setTweetsRef', this.userId)
     },
     methods: {
     },
@@ -80,12 +88,31 @@ export default {
             border-top: 1px solid map-get($color-service, border);
         }
     }
-    &-link {
-        text-decoration: none;
-        color: inherit;
-        @include hover-transition {
-            color: map-get($color-service, accent);
+    &-tabs {
+        display: flex;
+        li {
+            width: 100%;
         }
+        &-tab {
+            text-decoration: none;
+            color: inherit;
+            border-bottom: 2px solid map-get($color-service, border);
+            padding: 10px 0;
+            text-align: center;
+            color: #515151;
+            font-weight: bold;
+            font-size: 1.4rem;
+            display: block;
+            @include hover-transition {
+                color: map-get($color-service, accent);
+                border-color: map-get($color-service, accent);
+            }
+            &.selected {
+                color: map-get($color-service, accent);
+                border-color: map-get($color-service, accent);
+            }
+        }
+
     }
 }
 </style>

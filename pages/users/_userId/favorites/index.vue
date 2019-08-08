@@ -5,6 +5,14 @@
             <UserInfo />
         </section>
         <article class="timelines">
+            <ul class="timelines-tabs">
+                <li>
+                    <nuxt-link :to="`/users/${userId}/`" class="timelines-tabs-tab">ツイート</nuxt-link>
+                </li>
+                <li>
+                    <nuxt-link :to="`/users/${userId}/favorites/`" class="timelines-tabs-tab selected">いいね</nuxt-link>
+                </li>
+            </ul>
             <ul class="timelines-items">
                 <li v-for="(favorite, index) in favorites" :key="index" class="timelines-items-item">
                     <Tweet :username="favorite.username" :tweet="favorite" />
@@ -30,6 +38,7 @@ export default {
     },
     data () {
         return {
+            userId: ''
         }
     },
     computed: {
@@ -43,12 +52,11 @@ export default {
         },
     },
     mounted () {
-        const userId = this.$route.params.userId
-        this.$store.dispatch('userid/accessedUserpage', userId)
     },
     created () {
-        const userId = this.$route.params.userId
-        this.$store.dispatch('favorite/setFavorites', userId)
+        this.userId = this.$route.params.userId
+        this.$store.dispatch('userid/accessedUserpage', this.userId)
+        this.$store.dispatch('favorite/setFavorites', this.userId)
     },
     methods: {
     },
@@ -74,6 +82,31 @@ export default {
         box-sizing: border-box;
         &:not(:first-child) {
             border-top: 1px solid map-get($color-service, border);
+        }
+    }
+    &-tabs {
+        display: flex;
+        li {
+            width: 100%;
+        }
+        &-tab {
+            text-decoration: none;
+            color: inherit;
+            border-bottom: 2px solid map-get($color-service, border);
+            padding: 10px 0;
+            text-align: center;
+            color: #515151;
+            font-weight: bold;
+            font-size: 1.4rem;
+            display: block;
+            @include hover-transition {
+                color: map-get($color-service, accent);
+                border-color: map-get($color-service, accent);
+            }
+            &.selected {
+                color: map-get($color-service, accent);
+                border-color: map-get($color-service, accent);
+            }
         }
     }
 }
