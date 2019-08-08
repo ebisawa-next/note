@@ -54,6 +54,13 @@ export const actions = {
         if(!doc.exists) return
         await commit('showUsertweetData', doc.data())
     },
+
+    async getUserdata ({ state, commit, dispatch }, id) {
+        const doc = await ref.doc(id).get()
+        if(!doc.exists) return
+        const data = await doc.data().data
+        return data
+    }
 }
 export const getters = {
     getTweets(state) {
@@ -62,7 +69,6 @@ export const getters = {
     },
     getUserdata(state) {
         if(!state.id) return;
-        console.log(state.id)
         return {
             name: state.name,
             profile: state.profile,
@@ -80,5 +86,5 @@ export const getters = {
             following: state.following,
             follower: state.follower
         }
-    }
+    },
 }

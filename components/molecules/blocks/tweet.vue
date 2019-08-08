@@ -1,14 +1,19 @@
 <template>
     <div class="tweet">
         <nuxt-link :to="`/users/${userId}/${tweet.tweetId}`" class="tweet-link">
-            <div class="tweet-head">
-                <p class="tweet-head-name">
-                    <span>{{ username }}</span>
-                    <span class="tweet-head-id">@{{ userId }}</span>
-                </p>
-                <time class="tweet-head-time">{{ tweetDate }}</time>
+            <figure v-if="icon" class="tweet-icon">
+                <img v-if="userdata.photo" :src="userdata.photo">
+            </figure>
+            <div class="tweet-wrapper">
+                <div class="tweet-head">
+                    <p class="tweet-head-name">
+                        <span>{{ username }}</span>
+                        <span class="tweet-head-id">@{{ userId }}</span>
+                    </p>
+                    <time class="tweet-head-time">{{ tweetDate }}</time>
+                </div>
+                <p class="tweet-text">{{ tweet.tweet }}</p>
             </div>
-            <p class="tweet-text">{{ tweet.tweet }}</p>
         </nuxt-link>
         <ul class="tweet-actions">
             <li class="tweet-actions-action">
@@ -32,7 +37,8 @@ export default {
     },
     data () {
         return {
-            favorite: 0
+            favorite: 0,
+            userdata: {}
         }
     },
     computed: {
@@ -55,24 +61,31 @@ export default {
         tweet: {
             type: Object,
             default: null
+        },
+        icon: {
+            type: Boolean,
+            default: false
         }
     },
     async mounted () {
-
+        this.userdata = await this.$store.dispatch('userid/getUserdata', this.userId)
+        console.log(this.userdata)
     },
     async created () {
         const tw = this.tweet
         tw.userId = this.userId
+
+
         if(!tw.tweetId) {
             tw.tweetId = tw.id
         }
         const favorited = await this.$store.dispatch('favorite/getFavorited', tw)
         this.favorite = favorited
+
     },
     methods: {
         async addFavorite(tweet) {
             tweet.userId = this.userId
-            console.log(tweet)
             const newCount = await this.$store.dispatch('favorite/changeFavoriteStatus', tweet)
             this.favorite = newCount
         }
@@ -86,9 +99,25 @@ export default {
     &-link {
         text-decoration: none;
         color: inherit;
+        display: flex;
         @include hover-transition {
             color: map-get($color-service, accent);
         }
+    }
+    &-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 20px;
+        background-color: #f5f5f5;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+    &-wrapper {
+        flex: 1;
     }
     &-text {
         font-size: 1.8rem;
@@ -113,6 +142,7 @@ export default {
     }
     &-actions {
         display: flex;
+        justify-content: flex-end;
         &-action {
             &:not(:first-child) {
                 margin-left: 10px;

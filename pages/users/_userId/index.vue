@@ -14,7 +14,7 @@
                 </ul>
                 <ul class="timelines-items" v-if="hasTweets">
                     <li v-for="(tweet, index) in tweets" :key="index" class="timelines-items-item">
-                        <Tweet :username="userdata.name" :tweet="tweet" />
+                        <Tweet :username="userdata.name" :tweet="tweet" icon />
                     </li>
                 </ul>
                 <p v-else>まだツイートが投稿されていません</p>
@@ -112,7 +112,6 @@ export default {
                 border-color: map-get($color-service, accent);
             }
         }
-
     }
 }
 </style>
