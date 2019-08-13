@@ -24,7 +24,7 @@
             <li class="tweet-actions-action">
                 こめんと
             </li>
-            <li class="tweet-actions-action" @click="showDeleteTweetModal(tweet)">
+            <li class="tweet-actions-action" @click="showDeleteTweetModal(tweet)" v-if="myTweet">
                 ツイ消し
             </li>
         </ul>
@@ -46,6 +46,7 @@ export default {
     },
     computed: {
         ...mapGetters({
+            us: 'users/getUserdata'
         }),
         tweetDate () {
             const timestamp = this.tweet.created_at
@@ -54,6 +55,11 @@ export default {
         userId () {
             const userId = this.tweet.userId
             return userId ? userId : this.$route.params.userId
+        },
+        myTweet () {
+            const userId = this.us.id
+            const tweetUserId = this.$route.params.userId
+            return userId == tweetUserId ? true : false
         }
     },
     props: {
@@ -72,7 +78,6 @@ export default {
     },
     async mounted () {
         this.userdata = await this.$store.dispatch('userid/getUserdata', this.userId)
-        console.log(this.userdata)
     },
     async created () {
         const tw = this.tweet
