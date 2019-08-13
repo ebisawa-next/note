@@ -6,26 +6,36 @@ export const state = () => ({
     isTweetModalShow: false,
     isTweetSuccess: false,
     tweets: [],
+    deleteTweet: null,
+    isDeleteTweetModalShow: false
 })
 export const mutations = {
     ...vuexfireMutations,
     openTweetModal (state) {
         state.isTweetModalShow = true;
-        console.log(state.isTweetModalShow);
     },
     closeTweetModal (state) {
         state.isTweetModalShow = false;
-        console.log(state.isTweetModalShow);
     },
     successTweet (state) {
         state.isTweetSuccess = true;
-        console.log('successTweet')
     },
     showTweet(state, payload) {
         state.tweets = payload
     },
     init(state) {
         state.isTweetSuccess = false
+    },
+
+    showDeleteTweetModal(state, payload) {
+        state.deleteTweet = payload
+        state.isDeleteTweetModalShow = true
+        console.log(state)
+
+    },
+    closeDeleteTweetModal(state) {
+        state.deleteTweet = null
+        state.isDeleteTweetModalShow = false
     }
 }
 export const actions = {
@@ -49,6 +59,19 @@ export const actions = {
     init ({commit}) {
         commit('init')
     },
+
+    showDeleteTweetModal({ commit }, tweet) {
+        commit('showDeleteTweetModal', tweet)
+    },
+
+    async deleteTweet({ state, dispatch }) {
+        const tweet = state.deleteTweet
+        await ref.doc(tweet.userId).collection('tweets').doc(tweet.tweetId).delete()
+        dispatch('closeDeleteTweetModal')
+    },
+    closeDeleteTweetModal({ commit }) {
+        commit('closeDeleteTweetModal')
+    }
 }
 export const getters = {
     getIsTweetModalShow(state) {
@@ -59,5 +82,9 @@ export const getters = {
     },
     getTweets(state) {
         return state.tweets
-    }
+    },
+
+    getIsDeleteTweetModalShow(state) {
+        return state.isDeleteTweetModalShow
+    },
 }

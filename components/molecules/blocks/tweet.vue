@@ -24,6 +24,9 @@
             <li class="tweet-actions-action">
                 こめんと
             </li>
+            <li class="tweet-actions-action" @click="showDeleteTweetModal(tweet)">
+                ツイ消し
+            </li>
         </ul>
     </div>
 </template>
@@ -88,6 +91,9 @@ export default {
             tweet.userId = this.userId
             const newCount = await this.$store.dispatch('favorite/changeFavoriteStatus', tweet)
             this.favorite = newCount
+        },
+        showDeleteTweetModal(tweet) {
+            this.$store.dispatch('tweet/showDeleteTweetModal', tweet)
         }
     },
 }

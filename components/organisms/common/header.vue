@@ -17,6 +17,7 @@
       </p>
     </div>
     <TweetModal />
+    <DeleteModal />
   </header>
   <Success :show="isTweetSuccess">ツイートが投稿されました</Success>
 
@@ -30,9 +31,10 @@ import LoginStatus from '@/components/molecules/common/loginStatus'
 import Tweet from '@/components/molecules/forms/tweet'
 import TweetModal from '@/components/organisms/modals/tweetModal'
 import Success from '@/components/organisms/nofitications/success'
+import DeleteModal from '@/components/molecules/modals/del'
 export default {
   components: {
-    Logo, LoginStatus, Tweet, TweetModal, Success
+    Logo, LoginStatus, Tweet, TweetModal, Success, DeleteModal
   },
   data () {
     return {

@@ -33,6 +33,7 @@ export const actions = {
         })
         return followings
     },
+
     async showTimeline ({ state, commit, dispatch}, ids) {
         if(state.timeline.length > 0) return;
         for(const id of ids) {
