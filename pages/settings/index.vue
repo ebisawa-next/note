@@ -14,6 +14,15 @@
                 <p class="form-label">URL</p>
                 <input class="form-input" type="text" v-model="userdata.url" placeholder="https://oshushi.com" />
             </li>
+            <li class="settings-forms-form">
+                <p class="form-label">アイコン</p>
+                <div class="a">
+                    <input id="prg-icon-uploader" class="form-icon-input" type="file" @change="defectFiles($event)" />
+                    <label for="prg-icon-uploader" class="form-icon-wrapper">
+                        <img :src="photoUrl" class="form-icon">
+                    </label>
+                </div>
+            </li>
         </ul>
         <p class="settings-button" @click="saveUserdata(userdata.name,userdata.profile, userdata.url)">更新する</p>
     </section>
@@ -29,25 +38,47 @@ export default {
     },
     data () {
         return {
+            modifyPhoto: null
         }
     },
     computed: {
         ...mapGetters({
             userdata: 'users/getUserdata',
         }),
+        photoUrl () {
+            return this.modifyPhoto ? this.modifyPhoto : this.userdata.photo
+        }
     },
     mounted () {
     },
     created () {
     },
     methods: {
+        defectFiles(e) {
+            // アップロード対象は1件のみとする
+            const file = (e.target.files || e.dataTransfer.files)[0]
+            if (file) {
+                console.log(file)
+                // const fileName = uuid()
+
+                this.$store.dispatch('users/uploadImage', {
+                    name: file.name,
+                    file: file,
+                    userdata: this.userdata
+                }).then(url => {
+                    this.modifyPhoto = url
+                })
+            }
+        },
+
         saveUserdata (newName, newProfile, newUrl) {
             if(newName.length == 0) return;
             const data = {
                 name: newName,
                 profile: newProfile,
                 url: newUrl,
-                id: this.userdata.id
+                id: this.userdata.id,
+                photo: this.photoUrl
             }
             this.$store.dispatch('users/saveUserdata', data);
         },
@@ -114,5 +145,44 @@ $oshushi: map-get($color-service, accent);
             border-color: $oshushi;
         }
     }
+    &-icon {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        &-wrapper {
+            position: relative;
+            display: block;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            &::before {
+                position: absolute;
+                content: "ファイルを選ぶ";
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                opacity: 0;
+                background-color: rgba(0, 0, 0, .5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #fff;
+                font-weight: bold;
+                transition: .2s;
+                cursor: pointer;
+            }
+            &:hover::before {
+                opacity: 1;
+            }
+        }
+        &-input {
+            display: none;
+        }
+    }
+}
+.a {
+    flex: 3;
 }
 </style>

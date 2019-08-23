@@ -3,6 +3,7 @@ import { db } from '../plugins/firebase';
 import firebase from 'firebase';
 
 const users = db.collection('users')
+const firestorage = firebase.storage()
 
 export const state = () => ({
     userEmail: null,
@@ -30,6 +31,7 @@ export const mutations = {
         state.userId = payload.id
         state.userEmail = payload.mail
         state.userUrl = payload.url
+        state.userPhoto = payload.photo
         state.userProfile = payload.profile
         state.isSignedIn = true
     },
@@ -154,16 +156,31 @@ export const actions = {
      */
     saveUserdata ({ dispatch, state, commit }, payload) {
         const data = payload
-        data.photo = state.userPhoto
         // ユーザーID情報を保存
-        db.collection('userid').doc(payload.id).set({ data }).then(() => {
-            console.log('userid saved');
-            dispatch('showUserdata', payload.id);
+        db.collection('userid').doc(data.id).set({ data }).then(() => {
+            console.log('userid saved')
+            dispatch('showUserdata', data.id)
         }).catch((error) => {
-            console.error("Error writing document: ", error);
+            console.error("Error writing document: ", error)
         })
 
     },
+
+    uploadImage: (context, payload) => {
+        
+        return new Promise((resolve, reject) => {
+
+
+
+            // firestorage にファイルをアップロード
+            const uploadTask = firestorage.ref(`${payload.userdata.id}/icons/${payload.name}`).put(payload.file).then(snapshot => {
+                // アップロード完了処理。URLを取得し、呼び出し元へ返す。
+                snapshot.ref.getDownloadURL().then(url => {
+                    resolve(url)
+                })
+            })
+        })
+    }
 }
 export const getters = {
     getSignStatus (state) {
