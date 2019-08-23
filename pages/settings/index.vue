@@ -158,13 +158,13 @@ $oshushi: map-get($color-service, accent);
             overflow: hidden;
             &::before {
                 position: absolute;
-                content: "ファイルを選ぶ";
+                content: "画像を選ぶ";
                 top: 0;
                 right: 0;
                 bottom: 0;
                 left: 0;
                 opacity: 0;
-                background-color: rgba(0, 0, 0, .5);
+                background-color: rgba($oshushi, .9);
                 display: flex;
                 align-items: center;
                 justify-content: center;
