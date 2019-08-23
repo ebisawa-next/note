@@ -17,9 +17,18 @@
             <li class="settings-forms-form">
                 <p class="form-label">アイコン</p>
                 <div class="a">
-                    <input id="prg-icon-uploader" class="form-icon-input" type="file" @change="defectFiles($event)" />
+                    <input id="prg-icon-uploader" class="form-icon-input" type="file" @change="uploadIcon($event)" />
                     <label for="prg-icon-uploader" class="form-icon-wrapper">
                         <img :src="photoUrl" class="form-icon">
+                    </label>
+                </div>
+            </li>
+            <li class="settings-forms-form">
+                <p class="form-label">ヘッダー画像</p>
+                <div class="a">
+                    <input id="prg-header-uploader" class="form-header-input" type="file" @change="uploadHeader($event)" />
+                    <label for="prg-header-uploader" class="form-header-wrapper">
+                        <img :src="headerUrl" class="form-header">
                     </label>
                 </div>
             </li>
@@ -38,7 +47,8 @@ export default {
     },
     data () {
         return {
-            modifyPhoto: null
+            modifyPhoto: null,
+            modifyHeader: null,
         }
     },
     computed: {
@@ -47,6 +57,10 @@ export default {
         }),
         photoUrl () {
             return this.modifyPhoto ? this.modifyPhoto : this.userdata.photo
+        },
+        headerUrl() {
+            const header = this.userdata.header ? this.userdata.header : '#'
+            return this.modifyHeader ? this.modifyHeader : header
         }
     },
     mounted () {
@@ -54,19 +68,32 @@ export default {
     created () {
     },
     methods: {
-        defectFiles(e) {
+        uploadIcon(e) {
             // アップロード対象は1件のみとする
             const file = (e.target.files || e.dataTransfer.files)[0]
             if (file) {
-                console.log(file)
-                // const fileName = uuid()
-
                 this.$store.dispatch('users/uploadImage', {
+                    path: 'icons',
                     name: file.name,
                     file: file,
                     userdata: this.userdata
                 }).then(url => {
                     this.modifyPhoto = url
+                })
+            }
+        },
+
+        uploadHeader(e) {
+            // アップロード対象は1件のみとする
+            const file = (e.target.files || e.dataTransfer.files)[0]
+            if (file) {
+                this.$store.dispatch('users/uploadImage', {
+                    path: 'headers',
+                    name: file.name,
+                    file: file,
+                    userdata: this.userdata
+                }).then(url => {
+                    this.modifyHeader = url
                 })
             }
         },
@@ -78,7 +105,8 @@ export default {
                 profile: newProfile,
                 url: newUrl,
                 id: this.userdata.id,
-                photo: this.photoUrl
+                photo: this.photoUrl,
+                header: this.headerUrl
             }
             this.$store.dispatch('users/saveUserdata', data);
         },
@@ -180,6 +208,40 @@ $oshushi: map-get($color-service, accent);
         &-input {
             display: none;
         }
+    }
+    &-header {
+        &-input {
+            display: none;
+        }
+        &-wrapper {
+            position: relative;
+            display: block;
+            height: 100px;
+            overflow: hidden;
+            &::before {
+                position: absolute;
+                content: "画像を選ぶ";
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                opacity: 0;
+                background-color: rgba($oshushi, .9);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #fff;
+                font-weight: bold;
+                transition: .2s;
+                cursor: pointer;
+            }
+            &:hover::before {
+                opacity: 1;
+            }
+        }
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 }
 .a {

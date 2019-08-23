@@ -8,6 +8,7 @@ export const state = () => ({
     id: null,
     mail: null,
     photo: null,
+    header: null,
     usertweetData: null,
     following: false,
     follower: false,
@@ -21,6 +22,7 @@ export const mutations = {
         state.id = payload.id
         state.mail = payload.mail
         state.photo = payload.photo
+        state.header = payload.header
     },
 
     showUsertweetData(state, payload) {
@@ -75,7 +77,8 @@ export const getters = {
             url: state.url,
             id: state.id,
             mail: state.mail,
-            photo: state.photo
+            photo: state.photo,
+            header: state.header
         }
     },
     getUsertweetData(state) {
