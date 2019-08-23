@@ -3,22 +3,22 @@
         <UserHeader />
         <section v-if="userdata" class="container">
             <UserInfo />
+            <article class="timelines">
+                <ul class="timelines-tabs">
+                    <li>
+                        <nuxt-link :to="`/users/${userId}/`" class="timelines-tabs-tab">ツイート</nuxt-link>
+                    </li>
+                    <li>
+                        <nuxt-link :to="`/users/${userId}/favorites/`" class="timelines-tabs-tab selected">いいね</nuxt-link>
+                    </li>
+                </ul>
+                <ul class="timelines-items">
+                    <li v-for="(favorite, index) in favorites" :key="index" class="timelines-items-item">
+                        <Tweet :username="favorite.username" :tweet="favorite" />
+                    </li>
+                </ul>
+            </article>
         </section>
-        <article class="timelines">
-            <ul class="timelines-tabs">
-                <li>
-                    <nuxt-link :to="`/users/${userId}/`" class="timelines-tabs-tab">ツイート</nuxt-link>
-                </li>
-                <li>
-                    <nuxt-link :to="`/users/${userId}/favorites/`" class="timelines-tabs-tab selected">いいね</nuxt-link>
-                </li>
-            </ul>
-            <ul class="timelines-items">
-                <li v-for="(favorite, index) in favorites" :key="index" class="timelines-items-item">
-                    <Tweet :username="favorite.username" :tweet="favorite" />
-                </li>
-            </ul>
-        </article>
     </div>
 </template>
 
