@@ -1,7 +1,10 @@
 <template>
-  <div>
+  <div class="index">
     <Hero />
-    <Userlist />
+    <section class="index-contents">
+      <Heading heading="Users" icon="fa-user-alt" />
+      <Userlist />
+    </section>
   </div>
 </template>
 
@@ -12,6 +15,7 @@ import { db, auth } from '../plugins/firebase'
 // components
 import Hero from '@/components/molecules/blocks/Hero'
 import Userlist from '@/components/organisms/index/userlist'
+import Heading from '@/components/atoms/headings/iconHeading'
 export default {
   data () {
     return {
@@ -19,7 +23,7 @@ export default {
     }
   },
   components: {
-    Hero, Userlist
+    Hero, Userlist, Heading
   },
   computed: {
     ...mapGetters({
@@ -34,5 +38,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.index {
+  &-contents {
+    width: 85%;
+    margin: 0 auto;
+    padding: 50px 0;
+    @include mq(tbAndSp) {
+      width: 100%;
+      padding: 15px 10px;
+      box-sizing: border-box;
+    }
+  }
+}
 </style>
 

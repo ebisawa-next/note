@@ -47,11 +47,30 @@ export default {
 <style lang="scss" scoped>
 .user-cards {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     &-card {
-        width: 30%;
-        &:not(:first-child) {
-            margin-left: 10px;
+        width: calc(100% / 3 - 10px);
+        &:nth-child(n+4) {
+            margin-top: 10px;
         }
     }
+    &::after {
+        content: "";
+        display: block;
+        width: calc(100% / 3 - 10px);
+    }
+
+    @include mq(tbAndSp) {
+        padding: 10px;
+        flex-direction: column;
+        &-card {
+            width: 100%;
+            &:not(:first-child) {
+                margin: 10px 0 0 0;
+            }
+        }
+    }
+
 }
 </style>
