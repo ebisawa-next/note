@@ -12,12 +12,14 @@
                         <nuxt-link :to="`/users/${userId}/favorites/`" class="timelines-tabs-tab">いいね</nuxt-link>
                     </li>
                 </ul>
-                <ul class="timelines-items" v-if="hasTweets">
+                <ul class="timelines-items" v-if="this.tweets.length > 0">
                     <li v-for="(tweet, index) in tweets" :key="index" class="timelines-items-item">
                         <Tweet :username="userdata.name" :tweet="tweet" icon />
                     </li>
                 </ul>
-                <p v-else>まだツイートが投稿されていません</p>
+                <div v-else class="timelines-notweet">
+                    <p class="timelines-notweet-text">まだツイートが投稿されていません</p>
+                </div>
             </article>
         </section>
         <section v-else>
@@ -50,10 +52,7 @@ export default {
             isSignedIn: 'users/getSignStatus',
             userdata: 'userid/getUserdata',
             tweets: 'userid/getTweets',
-        }),
-        hasTweets () {
-            return true
-        },
+        })
     },
     mounted () {
     },
@@ -111,6 +110,12 @@ export default {
                 color: map-get($color-service, accent);
                 border-color: map-get($color-service, accent);
             }
+        }
+    }
+    &-notweet {
+        padding: 15px;
+        &-text {
+            font-size: 1.6rem;
         }
     }
 }

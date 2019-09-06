@@ -12,11 +12,14 @@
                         <nuxt-link :to="`/users/${userId}/favorites/`" class="timelines-tabs-tab selected">いいね</nuxt-link>
                     </li>
                 </ul>
-                <ul class="timelines-items">
+                <ul class="timelines-items" v-if="favorites.length > 0">
                     <li v-for="(favorite, index) in favorites" :key="index" class="timelines-items-item">
                         <Tweet :username="favorite.username" :tweet="favorite" />
                     </li>
                 </ul>
+                <div class="timelines-container" v-else>
+                    <p class="timelines-container-text">お気に入りツイートはありません</p>
+                </div>
             </article>
         </section>
     </div>
@@ -107,6 +110,12 @@ export default {
                 color: map-get($color-service, accent);
                 border-color: map-get($color-service, accent);
             }
+        }
+    }
+    &-container {
+        padding: 15px;
+        &-text {
+            font-size: 1.6rem;
         }
     }
 }

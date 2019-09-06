@@ -18,14 +18,15 @@
         <ul class="tweet-actions">
             <li class="tweet-actions-action">
                 <p class="tweet-actions-action-favorite" @click="addFavorite(tweet)">
-                    はーと{{ favorite }}
+                    <i class="far fa-heart tweet-actions-action-favorite-heart"></i>
+                    <span class="tweet-actions-action-favorite-count">{{ favorite }}</span>
                 </p>
             </li>
             <li class="tweet-actions-action">
-                こめんと
+                <i class="far fa-comment tweet-actions-action-comment"></i>
             </li>
             <li class="tweet-actions-action" @click="showDeleteTweetModal(tweet)" v-if="myTweet">
-                ツイ消し
+                <i class="far fa-trash-alt tweet-actions-action-delete"></i>
             </li>
         </ul>
     </div>
@@ -82,7 +83,6 @@ export default {
     async created () {
         const tw = this.tweet
         tw.userId = this.userId
-
 
         if(!tw.tweetId) {
             tw.tweetId = tw.id
@@ -154,9 +154,32 @@ export default {
     &-actions {
         display: flex;
         justify-content: flex-end;
+        align-items: center;
         &-action {
             &:not(:first-child) {
-                margin-left: 10px;
+                margin-left: 15px;
+            }
+            &-favorite {
+                display: flex;
+                align-items: center;
+                @include hover-transition() {
+                    color: map-get($color-service, accent);
+                }
+                &-heart {
+                    font-size: 1.6rem;
+                }
+                &-count {
+                    margin-left: 5px;
+                    font-size: 1.6rem;
+                }
+            }
+            &-comment,
+            &-delete {
+                font-size: 1.6rem;
+                color: #a5a5a5;
+                @include hover-transition() {
+                    color: map-get($color-service, accent);
+                }
             }
         }
     }
