@@ -15,7 +15,6 @@ export const state = () => ({
     noAccount: false,
     userTweet: [],
     init: false,
-    userTweetId: 0,
     userId: null,
     create: false,
 })
@@ -35,10 +34,6 @@ export const mutations = {
         state.userProfile = payload.profile
         state.isSignedIn = true
     },
-    initUserTweetId (state, id) {
-        state.userTweetId = id;
-        console.log('users init user tweetid', id)
-    },
     deleteUser (state) {
         state.userEmail = null
         state.userName = null
@@ -47,7 +42,6 @@ export const mutations = {
         state.noAccount = true
         state.userTweet = null
         state.init = false
-        state.userTweetId = 0
         state.userProfile = null
         state.userId = null
     },
@@ -119,11 +113,6 @@ export const actions = {
         .catch((err) => {
             console.error(err)
         })
-
-        db.collection('userid').doc(payload).collection('tweets').get()
-        .then(function (query) {
-            commit('initUserTweetId', query.size)
-        })
     },
 
     /**
@@ -193,7 +182,6 @@ export const getters = {
             profile: state.userProfile,
             photo: state.userPhoto,
             tweet: state.userTweet,
-            tweetId: state.userTweetId,
             id: state.userId,
             url: state.userUrl
         }
