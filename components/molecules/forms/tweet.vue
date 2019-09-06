@@ -25,7 +25,6 @@ export default {
     computed: {
         ...mapGetters({
             isSignedIn: 'users/getSignStatus',
-            userdata: 'users/getUserdata',
         }),
     },
     mounted () {

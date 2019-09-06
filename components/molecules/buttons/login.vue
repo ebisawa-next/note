@@ -36,7 +36,6 @@ export default {
     computed: {
         ...mapGetters({
             isSignedIn: 'users/getSignStatus',
-            userdata: 'users/getUserdata'
         }),
         caseClass: function () {
             if(this.case == '') return;
