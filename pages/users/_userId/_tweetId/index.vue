@@ -3,7 +3,7 @@
         <div class="personalTweet-header">
             <figure class="personalTweet-header-icon">
                 <img v-if="userdata.photo" :src="userdata.photo">
-                <figcaption v-else>no Image</figcaption>
+                <figcaption v-else class="noimage">no Image</figcaption>
             </figure>
             <p class="personalTweet-header-user">
                 <span class="personalTweet-header-user-name">{{ userdata.name }}</span>
@@ -100,7 +100,9 @@ export default {
         &-icon {
             width: 80px;
             height: 80px;
+            border-radius: 50%;
             margin-right: 30px;
+            background-color: #f5f5f5;
             @include mq(tbAndSp) {
                 width: 50px;
                 height: 50px;
@@ -110,6 +112,14 @@ export default {
                 width: 100%;
                 height: 100%;
                 object-fit: contain;
+            }
+            .noimage {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #a5a5a5;
             }
         }
         &-user {
