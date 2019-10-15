@@ -1,7 +1,15 @@
 <template>
     <div class="forms">
-        <textarea type="text" v-model="newTweet" class="textarea" placeholder="ほげほげほげ" />
-        <p class="sendButton" @click="saveTweet(newTweet)">つぶやく</p>
+        <div class="forms-wrapper">
+            <div style="width: 100%">
+                <textarea type="text" v-model="newTweet" class="textarea" placeholder="ほげほげほげ" />
+                <p class="forms-tweetLength">
+                    <span class="current" :class="{'is-over': isOver}">{{ newTweet.length }}</span><span class="max">{{ maxTweetLength }}</span>
+                </p>
+                <p v-if="isOver" class="errorMessage"><i class="fas fa-exclamation-triangle icon"></i>ツイートは140字以内にしてください</p>
+            </div>
+            <p class="sendButton" :class="{'is-active': isActive}" @click="saveTweet(newTweet)">つぶやく</p>
+        </div>
     </div>
 </template>
 
@@ -18,6 +26,7 @@ export default {
     data () {
         return {
             newTweet: '',
+            maxTweetLength: 140
         }
     },
     props: {
@@ -26,6 +35,18 @@ export default {
         ...mapGetters({
             isSignedIn: 'users/getSignStatus',
         }),
+        isOver() {
+            if(this.newTweet.length > this.maxTweetLength) {
+                return true
+            }
+            return false
+        },
+        isActive() {
+            if(this.newTweet.length > 0 && !this.isOver) {
+                return true
+            }
+            return false
+        }
     },
     mounted () {
     },
@@ -33,19 +54,16 @@ export default {
     },
     methods: {
         saveTweet (newTweet) {
-            if(newTweet.length == 0) return;
+            if(newTweet.length == 0) return
+            if(newTweet.length > this.maxTweetLength) return
             const payload = {
                 tweet: newTweet,
                 created_at: firebase.firestore.Timestamp.fromDate(new Date()),
                 favorite: 0
             }
-            this.$store.dispatch('tweet/closeTweetModal');
-            this.$store.dispatch('tweet/saveTweet', payload);
-            this.$store.dispatch({
-                type: 'tweet/init',
-                amout: 5000
-            })
-            this.newTweet = '';
+            this.$store.dispatch('tweet/closeTweetModal')
+            this.$store.dispatch('tweet/saveTweet', payload)
+            this.newTweet = ''
         },
     }
 }
@@ -53,9 +71,12 @@ export default {
 
 <style lang="scss" scoped>
 .forms {
-    display: flex;
-    align-items: flex-end;
-    flex-direction: column;
+    $oshushi: map-get($color-service, accent);
+    &-wrapper {
+        display: flex;
+        align-items: flex-end;
+        flex-direction: column;
+    }
     .textarea {
         width: 100%;
         height: 80px;
@@ -65,8 +86,6 @@ export default {
         flex: 3;
     }
     .sendButton {
-        $oshushi: map-get($color-service, accent);
-        background-color: $oshushi;
         color: #fff;
         padding: 10px;
         border-radius: 20px;
@@ -74,8 +93,14 @@ export default {
         text-align: center;
         flex: 1;
         font-size: 1.4rem;
-        @include hover-transition {
-            background-color: lighten($oshushi, 10%);
+        pointer-events: none;
+        background-color: #dadada;
+        &.is-active {
+            background-color: $oshushi;
+            pointer-events: auto;
+            @include hover-transition {
+                background-color: lighten($oshushi, 10%);
+            }
         }
     }
     @include mq {
@@ -86,6 +111,28 @@ export default {
         .sendButton {
             margin-left: 10px;
         }
+    }
+    &-tweetLength {
+        margin-top: 5px;
+        .max {
+            &::before {
+                content: "/";
+                margin: 0 5px;
+            }
+        }
+        .current {
+            &.is-over {
+                color: $oshushi;
+            }
+        }
+    }
+    .errorMessage {
+        margin-top: 10px;
+        .icon {
+            margin-right: 5px;
+        }
+        font-weight: bold;
+        color: $oshushi;
     }
 }
 </style>

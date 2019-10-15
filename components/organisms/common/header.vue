@@ -19,7 +19,7 @@
     <TweetModal />
     <DeleteModal />
   </header>
-  
+
   </div>
 </template>
 <script>

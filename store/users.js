@@ -152,8 +152,14 @@ export const actions = {
         db.collection('userid').doc(data.id).set({ data }).then(() => {
             console.log('userid saved')
             dispatch('showUserdata', data.id)
+            dispatch('nofitication/success', {
+                text: 'ユーザー情報を更新しました'
+            }, { root: true })
         }).catch((error) => {
             console.error("Error writing document: ", error)
+            dispatch('nofitication/success', {
+                text: 'ユーザー情報の更新に失敗しました'
+            }, { root: true })
         })
 
     },

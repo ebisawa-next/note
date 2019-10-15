@@ -38,7 +38,7 @@ export default {
     top: 10px;
     border-radius: 4px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, .3);
-    background-color: map-get($color-service, accent);
+    background-color: #999;
     z-index: 2000;
     visibility: hidden;
     opacity: 0;

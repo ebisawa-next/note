@@ -33,23 +33,33 @@ export default {
 <style lang="scss" scoped>
 .success {
     position: fixed;
-    left: 10px;
-    right: 10px;
-    top: 10px;
     border-radius: 4px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, .3);
     background-color: map-get($color-service, accent);
     z-index: 2000;
     visibility: hidden;
     opacity: 0;
-    transition: .5s;
+    transition: .2s;
+    @include mq {
+        right: 20px;
+        bottom: 20px;
+        &-contents {
+            padding: 10px 20px;
+        }
+    }
+    @include mq(tbAndSp) {
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        &-contents {
+            padding: 10px;
+        }
+    }
     &.is-animate {
         visibility: visible;
         opacity: 1;
     }
-    &-contents {
-        padding: 10px;
-    }
+
     &-text {
         color: map-get($color-service, base);
         font-size: 1.6rem;
