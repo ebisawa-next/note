@@ -1,7 +1,7 @@
 <template>
-    <div class="success" :class="{'is-animate': isShowSuccess}">
-        <div class="success-contents">
-            <p class="success-text"><i class="fas fa-check-circle icon"></i>{{ successText }}</p>
+    <div class="error" :class="{'is-animate': isShowError}">
+        <div class="error-contents">
+            <p class="error-text"><i class="fas fa-exclamation-triangle icon"></i>{{ errorText }}</p>
         </div>
     </div>
 </template>
@@ -19,8 +19,8 @@ export default {
     props: {},
     computed: {
         ...mapGetters({
-            isShowSuccess: 'nofitication/getSuccessState',
-            successText: 'nofitication/getSuccessText'
+            isShowError: 'nofitication/getErrorState',
+            errorText: 'nofitication/getErrorText'
         })
     },
     mounted () {
@@ -31,7 +31,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.success {
+.error {
     position: fixed;
     left: 10px;
     right: 10px;

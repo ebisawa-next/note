@@ -1,18 +1,22 @@
 <template>
   <div>
     <Header />
+    <Success />
+    <Error />
     <nuxt/>
     <Footer />
   </div>
 </template>
 
 <script>
+import Success from '@/components/organisms/nofitications/success'
+import Error from '@/components/organisms/nofitications/error'
 import Header from "@/components/organisms/common/header"
 import Footer from "@/components/organisms/common/footer"
 
 export default {
   components: {
-    Header, Footer
+    Header, Footer, Success, Error
   }
 };
 </script>

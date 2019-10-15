@@ -19,8 +19,7 @@
     <TweetModal />
     <DeleteModal />
   </header>
-  <Success :show="isTweetSuccess">ツイートが投稿されました</Success>
-
+  
   </div>
 </template>
 <script>
@@ -30,20 +29,16 @@ import Logo from '@/components/atoms/icons/common/logo'
 import LoginStatus from '@/components/molecules/common/loginStatus'
 import Tweet from '@/components/molecules/forms/tweet'
 import TweetModal from '@/components/organisms/modals/tweetModal'
-import Success from '@/components/organisms/nofitications/success'
 import DeleteModal from '@/components/molecules/modals/del'
 export default {
   components: {
-    Logo, LoginStatus, Tweet, TweetModal, Success, DeleteModal
+    Logo, LoginStatus, Tweet, TweetModal, DeleteModal
   },
   data () {
     return {
     }
   },
   computed: {
-    ...mapGetters({
-        isTweetSuccess: 'tweet/getIsTweetSuccess'
-    })
   },
   mounted () {
   },

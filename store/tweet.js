@@ -1,10 +1,8 @@
 import { vuexfireMutations, firestoreAction } from 'vuexfire'
 import { db } from '../plugins/firebase';
-import { initializeApp } from 'firebase';
 const ref = db.collection('userid')
 export const state = () => ({
     isTweetModalShow: false,
-    isTweetSuccess: false,
     tweets: [],
     deleteTweet: null,
     isDeleteTweetModalShow: false
@@ -17,16 +15,9 @@ export const mutations = {
     closeTweetModal (state) {
         state.isTweetModalShow = false;
     },
-    successTweet (state) {
-        state.isTweetSuccess = true;
-    },
     showTweet(state, payload) {
         state.tweets = payload
     },
-    init(state) {
-        state.isTweetSuccess = false
-    },
-
     showDeleteTweetModal(state, payload) {
         state.deleteTweet = payload
         state.isDeleteTweetModalShow = true
@@ -45,21 +36,15 @@ export const actions = {
     closeTweetModal ({ commit }) {
         commit('closeTweetModal');
     },
-    successTweet ({ commit }) {
-        commit('successTweet');
-    },
-    saveTweet ({ rootState, state, commit }, payload) {
+    saveTweet ({ rootState, dispatch }, payload) {
         db.collection('userid').doc(rootState.users.userId).collection('tweets').add(payload).then(() => {
             console.log('save tweet')
-            commit('successTweet')
+            dispatch('nofitication/success', {text: 'ツイートに成功しました'}, {root: true})
         }).catch((error) => {
             console.error("Error writing document: ", error);
+            dispatch('nofitication/error', {text: 'ツイートに失敗しました'}, {root: true})
         })
     },
-    init ({commit}) {
-        commit('init')
-    },
-
     showDeleteTweetModal({ commit }, tweet) {
         commit('showDeleteTweetModal', tweet)
     },
@@ -77,13 +62,9 @@ export const getters = {
     getIsTweetModalShow(state) {
         return state.isTweetModalShow;
     },
-    getIsTweetSuccess(state) {
-        return state.isTweetSuccess;
-    },
     getTweets(state) {
         return state.tweets
     },
-
     getIsDeleteTweetModalShow(state) {
         return state.isDeleteTweetModalShow
     },

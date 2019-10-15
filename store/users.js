@@ -55,6 +55,9 @@ export const mutations = {
         if (!state.create) return;
         location.href = '/mypage'
         state.create = true;
+    },
+    ramen (state, payload) {
+        console.log(payload)
     }
 }
 export const actions = {
@@ -155,13 +158,16 @@ export const actions = {
 
     },
 
-    uploadImage: (context, payload) => {
+    uploadImage: ({ dispatch }, payload) => {
         return new Promise((resolve, reject) => {
             // firestorage にファイルをアップロード
             const uploadTask = firestorage.ref(`${payload.userdata.id}/icons/${payload.name}`).put(payload.file).then(snapshot => {
                 // アップロード完了処理。URLを取得し、呼び出し元へ返す。
                 snapshot.ref.getDownloadURL().then(url => {
                     resolve(url)
+                    dispatch('nofitication/success', {text: '画像のアップロードに成功しました'}, { root: true })
+                }).catch((err) => {
+                    dispatch('nofitication/error',  {text: '画像のアップロードに失敗しました'}, { root: true })
                 })
             })
         })
