@@ -64,23 +64,24 @@ export const actions = {
     initStore: firestoreAction(({ bindFirestoreRef }, payload) => {
         bindFirestoreRef('users', users.where('userEmail', '==', payload.userEmail));
     }),
-    googleSignIn ({ dispatch }) {
-        firebase.auth().signInWithRedirect(new firebase.auth.GoogleAuthProvider())
-        dispatch('googleAuthStateChanged')
+    async googleSignIn ({ dispatch }) {
+        await firebase.auth().signInWithRedirect(new firebase.auth.GoogleAuthProvider())
+        await dispatch('googleAuthStateChanged')
     },
-    googleSignOut ({ dispatch }) {
-        firebase.auth().signOut()
-        dispatch('googleAuthStateChanged')
+    async googleSignOut ({ dispatch }) {
+        await firebase.auth().signOut()
+        await dispatch('googleAuthStateChanged')
     },
-    googleAuthStateChanged ({ dispatch, commit }) {
-        firebase.auth().onAuthStateChanged(user => {
+    async googleAuthStateChanged ({ dispatch, commit }) {
+        await firebase.auth().onAuthStateChanged(async (user) => {
             if (user) {
                 let { email, displayName, photoURL } = user
                 console.log('googleAuthStateChanged')
                 commit('storeUser', { userEmail: email, userName: displayName, userPhoto: photoURL })
                 dispatch('userCheck', email)
             } else {
-                commit('deleteUser')
+                await commit('deleteUser')
+                await dispatch('nofitication/success', {text: 'ログアウトしました'}, {root: true})
             }
         })
     },
@@ -98,6 +99,7 @@ export const actions = {
             } else {
                 console.log("No such document!")
                 commit('toCreateUserPage')
+                // dispatch('nofitication/success', {text: 'ユーザー情報を登録してください'}, {root: true})
                 // location.href = '/create'
                 // dispatch('createUser')
             }
@@ -139,6 +141,7 @@ export const actions = {
             location.href = `/users/${id}/`
         }).catch((error) => {
             console.error("Error writing document: ", error);
+            dispatch('nofitication/error', {text: 'ユーザー情報の作成に失敗しました'}, {root: true})
         });
     },
     /**

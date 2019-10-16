@@ -23,7 +23,7 @@
                     </label>
                 </div>
             </li>
-            <li class="settings-forms-form">
+            <!-- <li class="settings-forms-form">
                 <p class="form-label">ヘッダー画像</p>
                 <div class="a">
                     <input id="prg-header-uploader" class="form-header-input" type="file" @change="uploadHeader($event)" />
@@ -31,7 +31,7 @@
                         <img :src="headerUrl" class="form-header">
                     </label>
                 </div>
-            </li>
+            </li> -->
         </ul>
         <p class="settings-button" @click="saveUserdata(userdata.name,userdata.profile, userdata.url)">更新する</p>
     </section>
